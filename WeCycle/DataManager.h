@@ -1,10 +1,11 @@
 #pragma once
 class DataManager
 {
-
+private:
+	void loadFirebaseJSON(char* filename);
 
 public:
-	DataManager();
+	DataManager(char* filename);
 	~DataManager();
 };
 
