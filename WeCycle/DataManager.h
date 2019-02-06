@@ -1,13 +1,19 @@
 #pragma once
 #include <firebase\app.h>
+#include <firebase\database.h>
 
 class DataManager
 {
 private:
+	firebase::AppOptions appOptions;
+	firebase::database::Database *database;
+	firebase::database::DatabaseReference dbref;
 	void loadFirebaseJSON(char* filename, firebase::AppOptions *appOptions);
 
 public:
 	DataManager(char* filename);
-	~DataManager();
+	virtual ~DataManager(); //Called at the object's termination
+
+	firebase::database::DatabaseReference getDBref();
 };
 
