@@ -13,7 +13,7 @@ private:
 public:
 	DataManager(char* filename);
 	virtual ~DataManager(); //Called at the object's termination
-
+	void writeOrUpdateData(void *objectToPass);
 	firebase::database::DatabaseReference getDBref();
 };
 
