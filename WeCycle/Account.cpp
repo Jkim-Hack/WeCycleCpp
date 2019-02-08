@@ -18,9 +18,11 @@ std::map<std::string, std::map<std::string, std::string>> Account::toMap() {
 
 	std::map<std::string, std::map<std::string, std::string>> result;
 	result[this->username] = emailPass;
-
+	
 	return result;
 }
+
+
 
 
 Account::~Account() {

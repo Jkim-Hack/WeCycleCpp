@@ -76,7 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\Kim\Desktop\WeCycle\firebase;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Users\Kim\Desktop\WeCycle\Firebase libs\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>firebase_analytics.lib;firebase_app.lib;firebase_auth.lib;firebase_database.lib;firebase_dynamic_links.lib;firebase_functions.lib;firebase_instance_id.lib;firebase_invites.lib;firebase_messaging.lib;firebase_remote_config.lib;firebase_storage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -115,10 +120,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Account.h" />
     <ClInclude Include="DataManager.h" />
+    <ClInclude Include="PushableObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Account.cpp" />
     <ClCompile Include="DataManager.cpp" />
+    <ClCompile Include="PushableObject.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
 #include "DataManager.h"
+#include "PushableObject.h"
 
-class Account
+class Account : public PushableObject
 {
 private:
 	std::string username;

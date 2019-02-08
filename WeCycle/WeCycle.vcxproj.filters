@@ -14,4 +14,26 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Account.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PushableObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DataManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Account.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PushableObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
