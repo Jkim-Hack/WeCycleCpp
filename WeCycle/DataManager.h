@@ -9,12 +9,13 @@ private:
 	firebase::AppOptions appOptions;
 	firebase::database::Database *database;
 	firebase::database::DatabaseReference dbref;
-	void loadFirebaseJSON(char* filename, firebase::AppOptions *appOptions);
+	std::string parseJSONfromFile(const char* filename);
+	void loadFirebaseJSON(const char* parsedFile, firebase::AppOptions *appOptions);
 
 public:
-	DataManager(char* filename);
-	virtual ~DataManager(); //Called at the object's termination
-	void writeOrUpdateData(PushableObject objectToPass); //TODO: Implement this
+	DataManager(const char* filename);
+	void writeOrUpdateData(PushableObject objectToPass); 
 	firebase::database::DatabaseReference getDBref();
+	~DataManager(); //Called at the object's termination
 };
 
