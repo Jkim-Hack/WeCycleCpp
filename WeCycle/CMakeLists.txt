@@ -5,11 +5,12 @@ cmake_minimum_required (VERSION 3.8)
 
 # Include linked directories
 link_directories("Firebase_libs")
-include_directories("firebase")
+include_directories(${PROJECT_SOURCE_DIR}/firebase ${PROJECT_SOURCE_DIR}/nlohmann)
 
 
 # Add source to this project's executable.
 add_executable (WeCycle "WeCycle.cpp" "WeCycle.h" "Account.cpp" "Account.h" "DataManager.cpp" "DataManager.h" "PushableObject.cpp" "PushableObject.h")
+
 
 target_link_libraries(WeCycle ${CMAKE_SOURCE_DIR}/Firebase_libs/Debug/firebase_admob.lib 
 						${CMAKE_SOURCE_DIR}/Firebase_libs/Debug/firebase_analytics.lib 

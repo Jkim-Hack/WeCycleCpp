@@ -1,8 +1,9 @@
 #include "DataManager.h"
 #include <iostream>
+#include <fstream> 
 #include <firebase\app.h>
 
-
+using json = nlohmann::json;
 
 DataManager::DataManager(const char* filename) {
 	//Initializing firebase app
@@ -18,7 +19,13 @@ DataManager::DataManager(const char* filename) {
 }
 
 std::string DataManager::parseJSONfromFile(const char* filename) { //TODO: GET THE JsonCpp package through CMake and use a JSON Parser
-	return filename;
+
+	std::ifstream ifs(filename);
+	json j;
+	ifs >> j;
+	std::string returnVal = j.dump();
+
+	return returnVal;
 }
 
 void DataManager::loadFirebaseJSON(const char * filename, firebase::AppOptions *appOptions) {
