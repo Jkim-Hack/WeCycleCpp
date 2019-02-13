@@ -5,12 +5,14 @@
 #include "DataManager.h"
 #include <iostream>
 #include "Account.h"
+#include <json.hpp>
+#include <fstream> 
 
 
 int main() {
 
-	const char *filename = "google-services.json";
-
+	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json";
+	
 	DataManager dtmnger(filename);
 
 	Account acc("Jkim", "Hack", "E");
@@ -31,7 +33,7 @@ int main() {
 
 
 
-	std::cout << user + ", " + pass + ", " + email;
+	std::cout << user + ", " + pass + ", " + email << std::endl;
 	system("pause");
 	return 0;
 }

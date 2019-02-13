@@ -10,7 +10,7 @@ private:
 	firebase::AppOptions appOptions;
 	firebase::database::Database *database;
 	firebase::database::DatabaseReference dbref;
-	std::string parseJSONfromFile(const char* filename);
+	std::map<const char*, const char*> parseJSONfromFile(const char* filename);
 	void loadFirebaseJSON(const char* parsedFile, firebase::AppOptions *appOptions);
 
 public:
