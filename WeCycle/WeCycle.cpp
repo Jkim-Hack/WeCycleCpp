@@ -11,29 +11,16 @@
 
 int main() {
 
-	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json";
+	//const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
+	const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
 
 	DataManager dataManager(filename);
 
-	Account acc("Jkim", "Hack", "E");
-
+	Account acc("Jkim", "FFFFF", "HHHH");
 	std::map<std::string, std::map<std::string, std::string>> map = acc.toMap();
 
-	std::map<std::string, std::map<std::string, std::string>>::iterator it = map.begin();
-	std::string user;
-	std::string pass;
-	std::string email;
+	dataManager.writeOrUpdateData(acc);
 
-	user = it->first;
-	std::map<std::string, std::string> subMap = it->second;
-
-	std::map<std::string, std::string>::iterator it2 = subMap.begin();
-	pass = it2->first;
-	email = it2->second;
-
-
-
-	std::cout << user + ", " + pass + ", " + email << std::endl;
 	system("pause");
 	return 0;
 }

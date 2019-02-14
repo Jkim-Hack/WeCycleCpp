@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream> 
 #include <firebase\app.h>
+#include <firebase\variant.h>
 
 DataManager::DataManager(const char* filename) {
 	//Initializing firebase app
@@ -28,8 +29,11 @@ std::map<std::string, std::string> DataManager::parseJSONfromFile(const char* fi
 		result["project_id"] = j.at("project_info").value("project_id", "NULL");
 		result["storage_bucket"] = j.at("project_info").value("storage_bucket", "NULL");
 	}
-	catch (nlohmann::json::type_error &e) {
+	catch (nlohmann::json::out_of_range &e) {
 		std::cout << e.what();
+	}
+	catch (nlohmann::json::type_error &te) {
+		std::cout << te.what();
 	}
 	return result;
 }
@@ -68,15 +72,20 @@ firebase::database::DatabaseReference DataManager::getDBref() {
 }
 
 void DataManager::writeOrUpdateData(PushableObject objectToPass) {
-	std::string key = dbref.Child("accounts").PushChild().key();
+
+	//TODO: Firebase doesnt push maps need to fix
+
+	std::string key = dbref.Child("Accounts").PushChild().key_string();
 	objectToPass.setKey(key);
 	std::map<std::string, std::map<std::string, std::string>> entryValues = objectToPass.toMap();
 	
 	std::map<std::string, std::map<std::string, std::map<std::string, std::string>>> childUpdates;
-	childUpdates["/accounts/" + key] = entryValues;
-	
-	dbref.UpdateChildren(childUpdates);
+	childUpdates["/Accounts/" + key] = entryValues;
 
+	//dbref.Child("Accounts").PushChild().SetValue(childUpdates);
+
+	dbref.UpdateChildren(childUpdates);
+	std::cout << "Push Successful" << std::endl;
 }
 
 //Called at the object's termination
