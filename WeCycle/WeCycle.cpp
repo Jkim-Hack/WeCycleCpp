@@ -11,24 +11,9 @@
 
 int main() {
 
-	//const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json";
-	const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle";
+	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json";
 
-	std::ifstream ifs(filename);
-	nlohmann::json j;
-	ifs >> j;
-
-	try { 
-
-		const char * string = j["client"][0]["api_key"][0].value("current_key", "NULL").c_str();
-		std::cout << string;
-
-	}
-	catch (nlohmann::json::type_error &e) {
-		std::cout << e.what();
-	}
-
-	//DataManager dtmnger(filename);
+	DataManager dataManager(filename);
 
 	Account acc("Jkim", "Hack", "E");
 
