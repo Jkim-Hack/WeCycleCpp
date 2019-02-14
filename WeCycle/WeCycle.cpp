@@ -12,8 +12,8 @@
 int main() {
 
 	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json";
-	
-	DataManager dtmnger(filename);
+
+	DataManager dataManager(filename);
 
 	Account acc("Jkim", "Hack", "E");
 
