@@ -13,7 +13,7 @@ public:
 	Account(std::string username, std::string password);
 	Account(std::string username, std::string password, std::string emailAddress);
 
-	std::map<std::string, std::map<std::string, std::string>> toMap();
+	std::map<std::string, firebase::Variant> toMap();
 	~Account();
 };
 

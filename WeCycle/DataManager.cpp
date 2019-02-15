@@ -82,10 +82,8 @@ void DataManager::writeOrUpdateData(PushableObject objectToPass) {
 	std::map<std::string, std::map<std::string, std::map<std::string, std::string>>> childUpdates;
 	childUpdates["/Accounts/" + key] = entryValues;
 
-	//dbref.Child("Accounts").PushChild().SetValue(childUpdates);
-
-	dbref.UpdateChildren(childUpdates);
-	std::cout << "Push Successful" << std::endl;
+	dbref.UpdateChildren(entryValues);
+	std::cout << "Push Successful" << std::endl; //Allow this test by getting data
 }
 
 //Called at the object's termination

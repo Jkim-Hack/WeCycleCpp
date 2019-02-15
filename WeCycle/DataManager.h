@@ -2,6 +2,7 @@
 #include <firebase\app.h>
 #include <firebase\database.h>
 #include <json.hpp>
+#include "Account.h"
 #include "PushableObject.h"
 
 class DataManager

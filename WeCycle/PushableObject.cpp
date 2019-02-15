@@ -4,11 +4,11 @@
 
 PushableObject::PushableObject()
 {
-	
+
 }
 
-std::map<std::string, std::map<std::string, std::string>> PushableObject::toMap() {
-	std::map<std::string, std::map<std::string, std::string>> map;
+std::map<std::string, firebase::Variant> PushableObject::toMap() {
+	std::map<std::string, firebase::Variant> map;
 	return map;
 }
 

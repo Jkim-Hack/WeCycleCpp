@@ -1,14 +1,16 @@
 #pragma once
 #include <iostream>
 #include <map>
-class PushableObject
+#include <firebase\variant.h>
+
+class PushableObject : std::map<std::string, firebase::Variant>
 {
 private:
 	std::string objKey;
 
 public:
 	PushableObject();
-	virtual std::map<std::string, std::map<std::string, std::string>> toMap();
+	std::map<std::string, firebase::Variant> toMap();
 	//TODO: Think of more ways that a pushable object MUST have
 
 	std::string getKey();
