@@ -11,14 +11,12 @@
 
 int main() {
 
-	//const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
-	const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
+	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
+	//const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
 
 	DataManager dataManager(filename);
 
-	Account acc("Jkim", "FFFFF", "HHHH");
-	std::map<std::string, std::map<std::string, std::string>> map = acc.toMap();
-
+	Account acc("Jkim@droptable.com", "password");
 	dataManager.writeOrUpdateData(acc);
 
 	system("pause");

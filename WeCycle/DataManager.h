@@ -16,8 +16,9 @@ private:
 
 public:
 	DataManager(const char* filename);
+	~DataManager(); //Called at the object's termination
+
 	void writeOrUpdateData(PushableObject objectToPass); 
 	firebase::database::DatabaseReference getDBref();
-	~DataManager(); //Called at the object's termination
 };
 

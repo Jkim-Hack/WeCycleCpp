@@ -17,6 +17,11 @@ DataManager::DataManager(const char* filename) {
 	std::cout << "Data manager successfully built" << std::endl;
 }
 
+//Called at the object's termination
+DataManager::~DataManager() {
+	delete database;
+}
+
 std::map<std::string, std::string> DataManager::parseJSONfromFile(const char* filename) {
 	std::map<std::string, std::string> result;
 	std::ifstream ifs(filename);
@@ -67,26 +72,20 @@ void DataManager::loadFirebaseJSON(const char * filename, firebase::AppOptions *
 	}
 }
 
-firebase::database::DatabaseReference DataManager::getDBref() {
-	return dbref; 
-}
-
 void DataManager::writeOrUpdateData(PushableObject objectToPass) {
 
 	//TODO: Firebase doesnt push maps need to fix
 
 	std::string key = dbref.Child("Accounts").PushChild().key_string();
 	objectToPass.setKey(key);
-	std::map<std::string, std::map<std::string, std::string>> entryValues = objectToPass.toMap();
 	
-	std::map<std::string, std::map<std::string, std::map<std::string, std::string>>> childUpdates;
-	childUpdates["/Accounts/" + key] = entryValues;
+	std::map<std::string, firebase::Variant> childUpdates;
+	childUpdates["/Accounts/" + key] = objectToPass;
 
-	dbref.UpdateChildren(entryValues);
+	dbref.UpdateChildren(childUpdates);
 	std::cout << "Push Successful" << std::endl; //Allow this test by getting data
 }
 
-//Called at the object's termination
-DataManager::~DataManager() {
-	delete database;
+firebase::database::DatabaseReference DataManager::getDBref() {
+	return dbref;
 }

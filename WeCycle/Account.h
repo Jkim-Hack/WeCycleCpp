@@ -6,14 +6,13 @@
 class Account : public PushableObject
 {
 private:
-	std::string username;
-	std::string password;
 	std::string emailAddress;
+	std::string password;
+	long phoneNumber;
 public:
-	Account(std::string username, std::string password);
-	Account(std::string username, std::string password, std::string emailAddress);
+	Account(std::string emailAddress, std::string password);
+	Account(std::string emailAddress, std::string password, long phoneNumber);
 
-	std::map<std::string, firebase::Variant> toMap();
 	~Account();
 };
 
