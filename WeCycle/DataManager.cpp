@@ -72,17 +72,15 @@ void DataManager::loadFirebaseJSON(const char * filename, firebase::AppOptions *
 	}
 }
 
-void DataManager::writeOrUpdateData(PushableObject objectToPass) {
+void DataManager::pushData(PushableObject objectToPass, std::string parent) {
 
-	//TODO: Firebase doesnt push maps need to fix
-
-	std::string key = dbref.Child("Accounts").PushChild().key_string();
+	std::string key = dbref.Child(parent).PushChild().key_string();
 	objectToPass.setKey(key);
-	
-	std::map<std::string, firebase::Variant> childUpdates;
-	childUpdates["/Accounts/" + key] = objectToPass;
 
-	dbref.UpdateChildren(childUpdates);
+	for (auto &x : objectToPass.dataMap()) {
+		dbref.Child(parent).Child(x.first).SetValue(x.second);
+	}
+
 	std::cout << "Push Successful" << std::endl; //Allow this test by getting data
 }
 

@@ -16,8 +16,8 @@ int main() {
 
 	DataManager dataManager(filename);
 
-	Account acc("Jkim@droptable.com", "password");
-	dataManager.writeOrUpdateData(acc);
+	Account acc("Em@droptablecom", "passwoerdE");
+	dataManager.pushData(acc, "Accounts");
 
 	system("pause");
 	return 0;

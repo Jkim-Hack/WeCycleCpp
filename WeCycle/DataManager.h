@@ -18,7 +18,7 @@ public:
 	DataManager(const char* filename);
 	~DataManager(); //Called at the object's termination
 
-	void writeOrUpdateData(PushableObject objectToPass); 
+	void pushData(PushableObject objectToPass, std::string parent);
 	firebase::database::DatabaseReference getDBref();
 };
 
