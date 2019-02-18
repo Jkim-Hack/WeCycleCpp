@@ -77,7 +77,7 @@ void DataManager::pushData(PushableObject objectToPass, std::string parent) {
 	std::string key = dbref.Child(parent).PushChild().key_string();
 	objectToPass.setKey(key);
 	//Accounts: multiple for loops that access each data point.
-	//TODO: Make variables cleaner with actual types
+	//TODO: Make variables cleaner with actual types - RAGHAV DO THIS
 	for (auto &x : objectToPass.dataMap()) {
 		if (x.second.vector().size() > 0) {
 			for (auto &y : x.second.vector()) {
@@ -92,7 +92,7 @@ void DataManager::pushData(PushableObject objectToPass, std::string parent) {
 		}
 	}
 
-	std::cout << "Push Successful" << std::endl; //Allow this test by getting data
+	std::cout << "Push Successful" << std::endl; //TODO LOOK AT FIREBASE DOCUMENTATION
 }
 
 firebase::database::DatabaseReference DataManager::getDBref() {
