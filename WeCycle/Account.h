@@ -18,6 +18,7 @@ public:
 	Account(std::string emailAddress, std::string password);
 	Account(std::string emailAddress, std::string password, long phoneNumber);
 
+
 	//TODO add intialize override function and addData function
 	
 	~Account();

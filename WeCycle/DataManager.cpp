@@ -76,9 +76,20 @@ void DataManager::pushData(PushableObject objectToPass, std::string parent) {
 
 	std::string key = dbref.Child(parent).PushChild().key_string();
 	objectToPass.setKey(key);
-
+	//Accounts: multiple for loops that access each data point.
+	//TODO: Make variables cleaner with actual types
 	for (auto &x : objectToPass.dataMap()) {
-		dbref.Child(parent).Child(x.first).SetValue(x.second);
+		if (x.second.vector().size() > 0) {
+			for (auto &y : x.second.vector()) {
+				for (auto &z : y.map()) {
+					std::string key2 = z.first.string_value();
+					dbref.Child(parent).Child(x.first).Child(key2).SetValue(z.second);
+				}
+			}
+		}
+		else {
+			dbref.Child(parent).Child(x.first).SetValue(x.second);
+		}
 	}
 
 	std::cout << "Push Successful" << std::endl; //Allow this test by getting data
