@@ -10,7 +10,7 @@ include_directories(${PROJECT_SOURCE_DIR}/firebase ${PROJECT_SOURCE_DIR}/nlohman
 
 # Add source to this project's executable.
 add_executable (WeCycle "WeCycle.cpp" "WeCycle.h" "Account.cpp" "Account.h" "DataManager.cpp" "DataManager.h" "PushableObject.cpp" 
-				"PushableObject.h" "FirebaseManager.h" "FirebaseManager.cpp" "StorageManager.h" "StorageManager.cpp")
+				"PushableObject.h" "FirebaseManager.h" "FirebaseManager.cpp" "StorageManager.h" "StorageManager.cpp" "StorageListener.h" "StorageListener.cpp")
 
 
 target_link_libraries(WeCycle ${CMAKE_SOURCE_DIR}/Firebase_libs/Debug/firebase_admob.lib 

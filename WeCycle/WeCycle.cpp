@@ -4,6 +4,7 @@
 #include "WeCycle.h"
 #include "DataManager.h"
 #include "FirebaseManager.h"
+#include "StorageManager.h"
 #include <iostream>
 #include "Account.h"
 #include <json.hpp>
@@ -20,9 +21,16 @@ int main() {
 
 	DataManager dataManager(fbManager);
 
+	StorageManager storageManager(fbManager);
+
 	Account acc("jkim@droptablecom", "passwordE");
 	dataManager.pushData(acc, "Accounts");
 
+	const std::string link = storageManager.uploadImageRetreiveLink("C:/Users/Kim/Desktop/image.jpg");
+
+	//const std::string link = fileLinkptr->c_str();
+	std::cout << link << std::endl;
 	system("pause");
+
 	return 0;
 }

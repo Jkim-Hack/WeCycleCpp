@@ -3,7 +3,10 @@
 #include <firebase\app.h>
 #include <firebase\variant.h>
 
-DataManager::DataManager(FirebaseManager fbManager) {
+//TODO: ADD AUTHENTICATION TO FIREBASE
+
+
+DataManager::DataManager(FirebaseManager &fbManager) {
 	//Initializing firebase database and reference
 	database = firebase::database::Database::GetInstance(fbManager.getApp());
 	dbref = database->GetReference();
@@ -18,22 +21,24 @@ DataManager::~DataManager() {
 }
 
 void DataManager::pushData(PushableObject objectToPass, std::string parent) {
-
+	
 	std::string key = dbref.Child(parent).PushChild().key_string();
 	objectToPass.setKey(key);
 	//Accounts: multiple for loops that access each data point.
-	//TODO: Make variables cleaner with actual types - RAGHAV DO THIS
 	for (auto &x : objectToPass.dataMap()) {
+		std::string firstKey = x.first;
 		if (x.second.vector().size() > 0) {
 			for (auto &y : x.second.vector()) {
 				for (auto &z : y.map()) {
-					std::string key2 = z.first.string_value();
-					dbref.Child(parent).Child(x.first).Child(key2).SetValue(z.second);
+					std::string keys = z.first.string_value();
+					firebase::Variant values = z.second;
+					dbref.Child(parent).Child(firstKey).Child(keys).SetValue(values);
 				}
 			}
 		}
 		else {
-			dbref.Child(parent).Child(x.first).SetValue(x.second);
+			firebase::Variant value = x.second;
+			dbref.Child(parent).Child(firstKey).SetValue(value);
 		}
 	}
 
