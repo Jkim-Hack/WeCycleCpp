@@ -44,10 +44,10 @@ void DataManager::pushData(PushableObject objectToPass, std::string parent) {
 
 	std::cout << "Push Successful" << std::endl; //TODO: LOOK AT FIREBASE DOCUMENTATION FOR CHECKING
 }
-//TODO: THINK ABOUT A SATA STRUCTURE THAT CAN BE USED IN C AND SWIFT NOT JUST C++. STD::MAP WILL NOT WORK BECAUSE IT CANT BE TRANSFERRED TO C
-stringMap DataManager::retrieveData(std::string parent, std::string key) {
 
-	stringMap resultMap;
+std::string **DataManager::retrieveData(std::string parent, std::string key) {
+	//Needs to be 2d array so we can correctly keep the map and key values together
+	std::string **resultArray = nullptr;
 
 	firebase::Variant *resultValuePtr = nullptr;
 
@@ -57,23 +57,23 @@ stringMap DataManager::retrieveData(std::string parent, std::string key) {
 		if (result.error() == firebase::database::kErrorNone) {
 			std::cout << "Retrival Complete" << std::endl;
 			std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
-			//this seems to be causing the error
-			//std::cout << resultValuePtr->string_value << std::endl;
-			/*
-			for (auto &x : resultValuePtr->map()) {
-				std::cout << x.first.string_value() << ", " << x.second.string_value() << std::endl;
-			}
-			*/
-			for (auto &x : childList) {
+			resultArray = new std::string*[childList.size]; //Initialize height/how many children in the list
 
+			int height = 0; //Counter for the height
+			for (auto &map : childList) { //Iterate through the vector
+				resultArray[height] = new std::string[2]; //Another array for keys and values
+				for (auto &values : map.value().map()) { //Iterate through the map
+					resultArray[height][0] = values.first.string_value; //Key
+					resultArray[height][1] = values.second.string_value; //Value
+				}
+				height++;
 			}
 		} 
 		else {
 			std::cout << "Error Retrieving Data" << std::endl;
 		}
 
-	//resultMap[resultKey] = resultValue;
-	return resultMap;
+	return resultArray;
 }
 
 firebase::database::DatabaseReference DataManager::getDBref() {

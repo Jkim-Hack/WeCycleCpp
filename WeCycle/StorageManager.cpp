@@ -48,4 +48,5 @@ const std::string StorageManager::uploadImageRetreiveLink(std::string filepath) 
 
 	delete controller;
 	return result;
+	
 }

@@ -22,7 +22,7 @@ public:
 	~DataManager(); //Called at the object's termination
 
 	void pushData(PushableObject objectToPass, std::string parent);
-	stringMap retrieveData(std::string parent, std::string key);
+	std::string **retrieveData(std::string parent, std::string key);
 	firebase::database::DatabaseReference getDBref();
 
 };

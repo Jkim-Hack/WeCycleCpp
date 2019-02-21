@@ -27,11 +27,8 @@ int main() {
 	const std::string link = storageManager.uploadImageRetreiveLink("C:/Users/Kim/Desktop/image.jpg");
 	std::cout << link << std::endl;
 
-	stringMap dataRetrived = dataManager.retrieveData("Accounts", "jkim@droptablecom");
+	std::string **dataRetrived = dataManager.retrieveData("Accounts", "jkim@droptablecom");
 
-	for (auto &x : dataRetrived) {
-		std::cout << x.first << ", " << x.second << std::endl;
-	}
 
 	system("pause");
 
