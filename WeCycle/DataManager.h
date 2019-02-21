@@ -1,24 +1,29 @@
 #pragma once
 #include <firebase\app.h>
+#include <firebase\future.h>
 #include <firebase\database.h>
-#include <json.hpp>
 #include "Account.h"
 #include "PushableObject.h"
+#include "FirebaseManager.h"
+
+//TODO: ADD AUTHENTICATION TO FIREBASE
+
+using stringMap = std::map<std::string, std::string>;
 
 class DataManager
 {
 private:
-	firebase::AppOptions appOptions;
+	
 	firebase::database::Database *database;
 	firebase::database::DatabaseReference dbref;
-	std::map<std::string, std::string> parseJSONfromFile(const char* filename);
-	void loadFirebaseJSON(const char* parsedFile, firebase::AppOptions *appOptions);
 
 public:
-	DataManager(const char* filename);
+	DataManager(FirebaseManager &fbManager);
 	~DataManager(); //Called at the object's termination
 
-	void writeOrUpdateData(PushableObject objectToPass); 
+	void pushData(PushableObject objectToPass, std::string parent);
+	stringMap retrieveData(std::string parent, std::string key);
 	firebase::database::DatabaseReference getDBref();
+
 };
 

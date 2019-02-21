@@ -1,19 +1,17 @@
 #include "DataManager.h"
 #include <iostream>
-#include <fstream> 
 #include <firebase\app.h>
 #include <firebase\variant.h>
 
-DataManager::DataManager(const char* filename) {
-	//Initializing firebase app
-	firebase::AppOptions *appOps = &appOptions;
-	loadFirebaseJSON(filename, appOps);
-	firebase::App *app = firebase::App::Create(appOptions);
+//TODO: ADD AUTHENTICATION TO FIREBASE
 
+
+DataManager::DataManager(FirebaseManager &fbManager) {
 	//Initializing firebase database and reference
-	database = firebase::database::Database::GetInstance(app);
+	database = firebase::database::Database::GetInstance(fbManager.getApp());
 	dbref = database->GetReference();
 
+	bool checkIfBuiltCorrectly;//TODO: Check if the data manager is successfully built
 	std::cout << "Data manager successfully built" << std::endl;
 }
 
@@ -22,70 +20,63 @@ DataManager::~DataManager() {
 	delete database;
 }
 
-std::map<std::string, std::string> DataManager::parseJSONfromFile(const char* filename) {
-	std::map<std::string, std::string> result;
-	std::ifstream ifs(filename);
-	nlohmann::json j;
-	ifs >> j;
-	try { 
-		result["api_key"] = j["client"][0]["api_key"][0].value("current_key", "NULL"); 
-		result["app_id"] = j["client"][0]["client_info"].value("mobilesdk_app_id", "NULL");
-		result["database_url"] = j.at("project_info").value("firebase_url", "NULL");
-		result["project_id"] = j.at("project_info").value("project_id", "NULL");
-		result["storage_bucket"] = j.at("project_info").value("storage_bucket", "NULL");
-	}
-	catch (nlohmann::json::out_of_range &e) {
-		std::cout << e.what();
-	}
-	catch (nlohmann::json::type_error &te) {
-		std::cout << te.what();
-	}
-	return result;
-}
-
-void DataManager::loadFirebaseJSON(const char * filename, firebase::AppOptions *appOptions) {
-
-	std::map<std::string, std::string> jsonMap = DataManager::parseJSONfromFile(filename);
-	for (auto const& item : jsonMap) {
-		std::string key = item.first;
-		std::string value = item.second;
-		
-		if (key == "api_key") {
-			appOptions->set_api_key(value.c_str());
-		}
-		else if (key == "app_id") {
-			appOptions->set_app_id(value.c_str());
-		}
-		else if (key == "database_url") {
-			appOptions->set_database_url(value.c_str());
-		}
-		else if (key == "project_id") {
-			appOptions->set_project_id(value.c_str());
-		}
-		else if (key == "storage_bucket") {
-			appOptions->set_storage_bucket(value.c_str());
+void DataManager::pushData(PushableObject objectToPass, std::string parent) {
+	
+	std::string key = dbref.Child(parent).PushChild().key_string();
+	objectToPass.setKey(key);
+	//Accounts: multiple for loops that access each data point.
+	for (auto &x : objectToPass.dataMap()) {
+		std::string firstKey = x.first;
+		if (x.second.vector().size() > 0) {
+			for (auto &y : x.second.vector()) {
+				for (auto &z : y.map()) {
+					std::string keys = z.first.string_value();
+					firebase::Variant values = z.second;
+					dbref.Child(parent).Child(firstKey).Child(keys).SetValue(values);
+				}
+			}
 		}
 		else {
-			return;
+			firebase::Variant value = x.second;
+			dbref.Child(parent).Child(firstKey).SetValue(value);
+		}
+	}
+
+	std::cout << "Push Successful" << std::endl; //TODO: LOOK AT FIREBASE DOCUMENTATION FOR CHECKING
+}
+//TODO: THINK ABOUT A SATA STRUCTURE THAT CAN BE USED IN C AND SWIFT NOT JUST C++. STD::MAP WILL NOT WORK BECAUSE IT CANT BE TRANSFERRED TO C
+stringMap DataManager::retrieveData(std::string parent, std::string key) {
+
+	stringMap resultMap;
+
+	firebase::Variant *resultValuePtr = nullptr;
+
+	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).Child(key).GetValue();
+
+		while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete
+		if (result.error() == firebase::database::kErrorNone) {
+			std::cout << "Retrival Complete" << std::endl;
+			std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
+			//this seems to be causing the error
+			//std::cout << resultValuePtr->string_value << std::endl;
+			/*
+			for (auto &x : resultValuePtr->map()) {
+				std::cout << x.first.string_value() << ", " << x.second.string_value() << std::endl;
+			}
+			*/
+			for (auto &x : childList) {
+
+			}
+		} 
+		else {
+			std::cout << "Error Retrieving Data" << std::endl;
 		}
 
-	}
-}
-
-void DataManager::writeOrUpdateData(PushableObject objectToPass) {
-
-	//TODO: Firebase doesnt push maps need to fix
-
-	std::string key = dbref.Child("Accounts").PushChild().key_string();
-	objectToPass.setKey(key);
-	
-	std::map<std::string, firebase::Variant> childUpdates;
-	childUpdates["/Accounts/" + key] = objectToPass;
-
-	dbref.UpdateChildren(childUpdates);
-	std::cout << "Push Successful" << std::endl; //Allow this test by getting data
+	//resultMap[resultKey] = resultValue;
+	return resultMap;
 }
 
 firebase::database::DatabaseReference DataManager::getDBref() {
 	return dbref;
 }
+
