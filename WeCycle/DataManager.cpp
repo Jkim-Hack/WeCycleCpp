@@ -45,28 +45,26 @@ void DataManager::pushData(PushableObject objectToPass, std::string parent) {
 	std::cout << "Push Successful" << std::endl; //TODO: LOOK AT FIREBASE DOCUMENTATION FOR CHECKING
 }
 
-std::string **DataManager::retrieveData(std::string parent, std::string key) {
-	//Needs to be 2d array so we can correctly keep the map and key values together
-	std::string **resultArray = nullptr;
+std::string *DataManager::retrieveData(std::string parent, std::string key) {
 
-	firebase::Variant *resultValuePtr = nullptr;
+	std::string *resultArray = nullptr;
 
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).Child(key).GetValue();
 
 		while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete
 		if (result.error() == firebase::database::kErrorNone) {
 			std::cout << "Retrival Complete" << std::endl;
-			std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
-			resultArray = new std::string*[childList.size]; //Initialize height/how many children in the list
 
-			int height = 0; //Counter for the height
-			for (auto &map : childList) { //Iterate through the vector
-				resultArray[height] = new std::string[2]; //Another array for keys and values
-				for (auto &values : map.value().map()) { //Iterate through the map
-					resultArray[height][0] = values.first.string_value; //Key
-					resultArray[height][1] = values.second.string_value; //Value
-				}
-				height++;
+			std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
+
+			unsigned int heightMax = childList.size();
+			resultArray = new std::string[heightMax];
+
+			int counter = 0;
+			for (auto &values : childList) { //Iterate through the vector of STRING VALUE
+				std::string value = values.value().string_value();
+				resultArray[counter] = value;
+				counter++;
 			}
 		} 
 		else {

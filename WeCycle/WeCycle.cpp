@@ -14,8 +14,8 @@ using stringMap = std::map<std::string, std::string>;
 
 int main() {
 
-	//const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
-	const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
+	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
+	//const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
 
 
 	FirebaseManager fbManager(filename);
@@ -27,8 +27,7 @@ int main() {
 	const std::string link = storageManager.uploadImageRetreiveLink("C:/Users/Kim/Desktop/image.jpg");
 	std::cout << link << std::endl;
 
-	std::string **dataRetrived = dataManager.retrieveData("Accounts", "jkim@droptablecom");
-
+	std::string *dataRetrived = dataManager.retrieveData("Accounts", "jkim@droptablecom");
 
 	system("pause");
 
