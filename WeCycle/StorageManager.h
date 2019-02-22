@@ -16,9 +16,9 @@ private:
 	firebase::storage::Storage *storage;
 	firebase::storage::StorageReference storage_ref;
 public:
-	StorageManager(FirebaseManager &fbManager);
+	StorageManager(FirebaseManager *fbManager);
 	~StorageManager();
-	const std::string uploadImageRetreiveLink(std::string filepath);
+	const char *uploadImageRetreiveLink(std::string filepath);
 
 
 };

@@ -3,6 +3,8 @@
 #include <map>
 #include <firebase\variant.h>
 
+//TODO SWITCH ALL VARAINTS TO TYPE STRING. CHANGE IT IN THE CPP FILE. THEN CREATE WRAPPERS
+
 using stringMap = std::map<std::string, std::string>;
 
 class PushableObject

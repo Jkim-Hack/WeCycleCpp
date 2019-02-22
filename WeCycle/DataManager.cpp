@@ -6,9 +6,9 @@
 //TODO: ADD AUTHENTICATION TO FIREBASE
 
 
-DataManager::DataManager(FirebaseManager &fbManager) {
+DataManager::DataManager(FirebaseManager *fbManager) {
 	//Initializing firebase database and reference
-	database = firebase::database::Database::GetInstance(fbManager.getApp());
+	database = firebase::database::Database::GetInstance(fbManager->getApp());
 	dbref = database->GetReference();
 
 	bool checkIfBuiltCorrectly;//TODO: Check if the data manager is successfully built
@@ -20,12 +20,12 @@ DataManager::~DataManager() {
 	delete database;
 }
 
-void DataManager::pushData(PushableObject objectToPass, std::string parent) {
+void DataManager::pushData(PushableObject *objectToPass, std::string parent) {
 	
 	std::string key = dbref.Child(parent).PushChild().key_string();
-	objectToPass.setKey(key);
+	objectToPass->setKey(key);
 	//Accounts: multiple for loops that access each data point.
-	for (auto &x : objectToPass.dataMap()) {
+	for (auto &x : objectToPass->dataMap()) {
 		std::string firstKey = x.first;
 		if (x.second.vector().size() > 0) {
 			for (auto &y : x.second.vector()) {
@@ -45,9 +45,9 @@ void DataManager::pushData(PushableObject objectToPass, std::string parent) {
 	std::cout << "Push Successful" << std::endl; //TODO: LOOK AT FIREBASE DOCUMENTATION FOR CHECKING
 }
 
-std::string *DataManager::retrieveData(std::string parent, std::string key) {
+const char **DataManager::retrieveData(std::string parent, std::string key) {
 
-	std::string *resultArray = nullptr;
+	const char **resultArray = nullptr;
 
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).Child(key).GetValue();
 
@@ -58,12 +58,11 @@ std::string *DataManager::retrieveData(std::string parent, std::string key) {
 			std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
 
 			unsigned int heightMax = childList.size();
-			resultArray = new std::string[heightMax];
+			resultArray = new const char*[heightMax];
 
 			int counter = 0;
 			for (auto &values : childList) { //Iterate through the vector of STRING VALUE
-				std::string value = values.value().string_value();
-				resultArray[counter] = value;
+				resultArray[counter] = values.value().string_value();
 				counter++;
 			}
 		} 

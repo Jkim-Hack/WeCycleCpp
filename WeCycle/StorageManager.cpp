@@ -2,16 +2,16 @@
 
 //TODO: ADD AUTHENTICATION TO FIREBASE
 
-StorageManager::StorageManager(FirebaseManager &fbManager) {
+StorageManager::StorageManager(FirebaseManager *fbManager) {
 	
-	storage = firebase::storage::Storage::GetInstance(fbManager.getApp());
+	storage = firebase::storage::Storage::GetInstance(fbManager->getApp());
 	storage_ref = storage->GetReferenceFromUrl("gs://wecycle-316c1.appspot.com");
 
 }
 
 StorageManager::~StorageManager() {}
 
-const std::string StorageManager::uploadImageRetreiveLink(std::string filepath) {
+const char *StorageManager::uploadImageRetreiveLink(std::string filepath) {
 	 const std::string *resultPtr = new std::string("");
 
 	firebase::storage::StorageReference image_ref = storage_ref.Child("images/image.jpg");
@@ -46,7 +46,9 @@ const std::string StorageManager::uploadImageRetreiveLink(std::string filepath) 
 	}
 	const std::string result = *resultPtr;
 
+	const char *resultChar = result.c_str();
+
 	delete controller;
-	return result;
+	return resultChar;
 	
 }
