@@ -21,13 +21,13 @@ int main() {
 	FirebaseManager *fbManager = new FirebaseManager(filename);
 	DataManager dataManager(fbManager);
 	StorageManager storageManager(fbManager);
-	Account *acc = new Account("jkim@droptablecom", "passwordE");
+	Account *acc = new Account("C@droptablecom", "passwordE");
 	dataManager.pushData(acc, "Accounts");
 
 	const std::string link = storageManager.uploadImageRetreiveLink("C:/Users/Kim/Desktop/image.jpg");
 	std::cout << link << std::endl;
 
-	const char **dataRetrived = dataManager.retrieveData("Accounts", "jkim@droptablecom");
+	const char **dataRetrived = dataManager.retrieveData("Accounts", "C@droptablecom");
 
 	for (size_t i = 0; i < 2; i++)
 	{

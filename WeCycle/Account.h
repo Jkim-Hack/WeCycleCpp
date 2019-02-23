@@ -2,6 +2,7 @@
 #include <iostream>
 #include "DataManager.h"
 #include "PushableObject.h"
+#include "Rank.h"
 
 using stringMap = std::map<std::string, std::string>;
 

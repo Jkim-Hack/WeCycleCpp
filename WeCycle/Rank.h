@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 class Rank
 {
 private:
@@ -7,8 +7,9 @@ private:
 	std::string rank;
 
 public:
-	Rank(0, "Beginner");
+	Rank();
 	Rank(unsigned int xp, std::string rank);
+	~Rank();
 
 	void LevelUpRank();
 };

@@ -1,6 +1,6 @@
 #include "Rank.h"
 
-Rank::Rank(0, "Beginner")
+Rank::Rank()
 {
 	this->xp = 0;
 	this->rank = "Beginner";
@@ -14,5 +14,7 @@ Rank::Rank(unsigned int xp, std::string rank)
 
 void Rank::LevelUpRank()
 {
-
+	if(250 <= xp <500){rank = "Junior Environmentalist";}
+	else if (500<= xp < 1000) { rank = "Conscious Saver"; }
+	else if (1000 <= xp < 2000) { rank = "Official Eco-citizen";}
 }
