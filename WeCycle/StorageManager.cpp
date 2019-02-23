@@ -46,7 +46,7 @@ const char *StorageManager::uploadImageRetreiveLink(std::string filepath) {
 	}
 	const std::string result = *resultPtr;
 
-	const char *resultChar = result.c_str();
+	const char *resultChar = strdup(result.c_str()); //strdup makes sure our char in the memory stays in the memory even when out of scope by creating a duplicate char array (string)
 
 	delete controller;
 	return resultChar;

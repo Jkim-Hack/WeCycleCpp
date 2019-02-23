@@ -11,25 +11,31 @@
 #include <fstream> 
 
 using stringMap = std::map<std::string, std::string>;
-
+/*
 int main() {
 
 	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
 	//const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
 
 
-	FirebaseManager fbManager(filename);
+	FirebaseManager *fbManager = new FirebaseManager(filename);
 	DataManager dataManager(fbManager);
 	StorageManager storageManager(fbManager);
-	Account acc("jkim@droptablecom", "passwordE");
+	Account *acc = new Account("jkim@droptablecom", "passwordE");
 	dataManager.pushData(acc, "Accounts");
 
 	const std::string link = storageManager.uploadImageRetreiveLink("C:/Users/Kim/Desktop/image.jpg");
 	std::cout << link << std::endl;
 
-	std::string *dataRetrived = dataManager.retrieveData("Accounts", "jkim@droptablecom");
+	const char **dataRetrived = dataManager.retrieveData("Accounts", "jkim@droptablecom");
+
+	for (size_t i = 0; i < 2; i++)
+	{
+		std::cout << dataRetrived[i] << std::endl;
+	}
 
 	system("pause");
 
 	return 0;
 }
+*/

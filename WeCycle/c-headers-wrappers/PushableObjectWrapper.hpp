@@ -4,10 +4,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	const void *initialize();
+	const void *initializePushableObject();
 	void addData(const void *object, const char *key, const char *mapKey, const char *mapValue);
-	void initializeMap(const void *object, const char *keyMap, const char *keyValue);
-	void initializeMap(const void *object, const char *keyMap, const char *keyValue, const char *keyValue2);
+	void initializeMap_basic(const void *object, const char *keyMap, const char *keyValue);
+	void initializeMap_basic_map(const void *object, const char *keyMap, const char *keyValue, const char *keyValue2);
 
 #ifdef __cplusplus
 }

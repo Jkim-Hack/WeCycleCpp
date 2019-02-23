@@ -3,7 +3,7 @@
 #include "FirebaseManager.h"
 #include "PushableObject.h"
 
-const void *initialize(const void *object) {
+const void *initializeDataManager(const void *object) {
 	DataManager *dataManager = new DataManager((FirebaseManager *)object);
 	return (void *)dataManager;
 }

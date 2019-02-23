@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	const void *initialize(const char *filename);
+	const void *initializeFirebase(const char *filename);
 #ifdef __cplusplus
 }
 #endif

@@ -62,7 +62,7 @@ const char **DataManager::retrieveData(std::string parent, std::string key) {
 
 			int counter = 0;
 			for (auto &values : childList) { //Iterate through the vector of STRING VALUE
-				resultArray[counter] = values.value().string_value();
+				resultArray[counter] = strdup(values.value().string_value());  //strdup makes sure our char in the memory stays in the memory even when out of scope by creating a duplicate char array (string
 				counter++;
 			}
 		} 
