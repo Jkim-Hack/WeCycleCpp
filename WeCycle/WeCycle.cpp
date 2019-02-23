@@ -14,7 +14,7 @@ using stringMap = std::map<std::string, std::string>;
 /*
 int main() {
 
-	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
+	const char *filename = "google-services.json"; //Desktop
 	//const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
 
 
