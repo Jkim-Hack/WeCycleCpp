@@ -13,7 +13,7 @@ private:
 	std::string password;
 	long phoneNumber;
 	std::vector<stringMap> dataList;
-	
+
 
 public:
 	Account(std::string emailAddress, std::string password);
@@ -21,7 +21,7 @@ public:
 
 
 	//TODO add intialize override function and addData function
-	
+
 	~Account();
 };
 

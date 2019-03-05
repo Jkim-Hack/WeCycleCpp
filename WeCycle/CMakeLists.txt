@@ -9,7 +9,7 @@ include_directories(${PROJECT_SOURCE_DIR}/WeCycle ${PROJECT_SOURCE_DIR}/firebase
 
 
 # Add source to this project's executable.
-add_executable (WeCycle "main.c" "WeCycle.cpp" "WeCycle.h" "Account.cpp" "Account.h" "DataManager.cpp" "DataManager.h" "PushableObject.cpp" 
+add_executable (WeCycle "WeCycle.cpp" "WeCycle.h" "Account.cpp" "Account.h" "DataManager.cpp" "DataManager.h" "PushableObject.cpp" 
 				"PushableObject.h" "FirebaseManager.h" "FirebaseManager.cpp" "StorageManager.h" "StorageManager.cpp" "StorageListener.h" 
 				"StorageListener.cpp"
 				"c-headers-wrappers/DataManagerWrapper.hpp"
