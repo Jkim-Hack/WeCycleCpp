@@ -11,7 +11,7 @@
 #include <fstream> 
 #include "Authentication.h"
 
-using stringMap = std::map<std::string, firebase::Variant>;
+//using stringMap = std::map<std::string, firebase::Variant>;
 
 int main() {
 
@@ -22,33 +22,40 @@ int main() {
 	FirebaseManager *fbManager = new FirebaseManager(filename);
 	DataManager dataManager(fbManager);
 	StorageManager storageManager(fbManager);
-	Account acc("Raghav@droptable.com", "passwordE");
+	Account *acc = new Account("C@droptablecom", "passwordE");
 	PushableObject object();
 
-	stringMap map;
-	map.insert(std::pair<std::string, std::string>("salt0", "m4rk4ss"));
-	stringMap map2;
-	map2.insert(std::pair<std::string, std::string>("salt1", "br0wnl33"));
-
+	std::map<std::string, firebase::Variant> map;
+	map.insert(std::pair<std::string, firebase::Variant>("salt0", "m4rk4ss"));
+	std::map<std::string, firebase::Variant> map2;
+	map2.insert(std::pair<std::string, firebase::Variant>("salt1", "br0wnl33"));
+	/*
 	PushableObject *push = new PushableObject();
 	push->initialize(map);
 	PushableObject *push1 = new PushableObject();
 	push->initialize(map2);
 	dataManager.pushData(push, "s4lT");
 	dataManager.pushData(push1, "s4lT");
-
+	*/
 	//Authentication auth(fbManager);
 	//auth.createAndRegisterAccount(acc);
 
 	//const std::string link = storageManager.uploadImageRetreiveLink("C:/Users/Kim/Desktop/image.jpg");
 	//std::cout << link << std::endl;
 
-	//const char **dataRetrived = dataManager.retrieveData("Accounts", "C@droptablecom");
+	dataManager.pushData(acc, "Account");
 
-	//for (size_t i = 0; i < 2; i++)
-	//{
-	//	std::cout << dataRetrived[i] << std::endl;
-	//}
+	const char **dataRetrived = dataManager.retrieveData("Accounts", "C@droptablecom");
+
+	for (size_t i = 0; i < 2; i++)
+	{
+		std::cout << dataRetrived[i] << std::endl;
+	}
+
+	delete acc;
+	delete fbManager;
+	//delete push;
+	//delete push1;
 
 	system("pause");
 

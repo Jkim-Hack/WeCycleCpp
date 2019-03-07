@@ -13,6 +13,6 @@ private:
 
 public: 
 	std::string encrypt(std::string stringToEncrypt);
-	std::string encrypt(std::string stringToEncrypt, std::string salt);
+	std::string encrypt(std::string stringToEncrypt, std::string salt, std::string salt1);
 	std::string decrypt(std::string digest);
 };
