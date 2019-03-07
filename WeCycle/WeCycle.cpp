@@ -15,14 +15,14 @@ using stringMap = std::map<std::string, std::string>;
 
 int main() {
 
-	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
-	//const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
+	//const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
+	const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
 
 
 	FirebaseManager *fbManager = new FirebaseManager(filename);
 	DataManager dataManager(fbManager);
 	StorageManager storageManager(fbManager);
-	Account acc("TETSTSTST@droptable.com", "passwordE");
+	Account acc("Raghav@droptable.com", "passwordE");
 	Authentication auth(fbManager);
 	auth.createAndRegisterAccount(acc);
 

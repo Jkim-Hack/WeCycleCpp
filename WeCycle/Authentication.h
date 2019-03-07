@@ -15,9 +15,9 @@ public:
 	Authentication(FirebaseManager *fbManager);
 	~Authentication();
 
-	std::string createAndRegisterAccount(Account account);
-	std::string createAndRegisterAccount(std::string email, std::string password);
+	std::string createAndRegisterAccount(Account account); //Returns user ID
+	std::string createAndRegisterAccount(std::string email, std::string password); //Returns user ID
 
-	std::string signInUser(Account account);
-	std::string signInUser(std::string email, std::string password);
+	std::string signInUser(Account account); //Returns user ID
+	std::string signInUser(std::string email, std::string password); //Returns user ID
 };
