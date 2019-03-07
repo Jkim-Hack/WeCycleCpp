@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 	const void *initializeAuthentication(const void *fbManager);
-	const char* createAndRegisterAccount(const void *account);
-	const char* createAndRegisterAccount(const char* email, const char* password);
+	const char* createAndRegisterAccount_account(const void *account);
+	const char* createAndRegisterAccount_string(const char* email, const char* password);
 	const char* signInUser_account(const void  *account);
 	const char* signInUser_string(const char* email, const char* password);
 

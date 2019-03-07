@@ -7,12 +7,12 @@ Authentication::Authentication(FirebaseManager *fbManager) {
 
 Authentication::~Authentication() {}
 
-std::string Authentication::createAndRegisterAccount(Account acc) {
+std::string Authentication::createAndRegisterAccount(Account *acc) {
 	
 	std::string uID = "";
 
-	const char *email = strdup(acc.getEmail().c_str());
-	const char *password = strdup(acc.getPassword().c_str());
+	const char *email = strdup(acc->getEmail().c_str());
+	const char *password = strdup(acc->getPassword().c_str());
 
 	firebase::Future<firebase::auth::User*> result = auth->CreateUserWithEmailAndPassword(email, password);
 
@@ -52,12 +52,12 @@ std::string Authentication::createAndRegisterAccount(std::string emailO, std::st
 	return uID;
 }
 
-std::string Authentication::signInUser(Account acc) {
+std::string Authentication::signInUser(Account *acc) {
 
 	std::string uID = "";
 
-	const char *email = strdup(acc.getEmail().c_str());
-	const char *password = strdup(acc.getPassword().c_str());
+	const char *email = strdup(acc->getEmail().c_str());
+	const char *password = strdup(acc->getPassword().c_str());
 
 	firebase::Future<firebase::auth::User*> result =
 		auth->SignInWithEmailAndPassword(email, password);

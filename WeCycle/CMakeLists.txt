@@ -21,7 +21,9 @@ add_executable (WeCycle "WeCycle.cpp" "WeCycle.h" "Account.cpp" "Account.h" "Dat
 				"c-headers-wrappers/PushableObjectWrapper.hpp"
 				"c-headers-wrappers/PushableObjectWrapper.cpp" 
 				"c-headers-wrappers/StorageManagerWrapper.hpp" 
-				"c-headers-wrappers/StorageManagerWrapper.cpp")
+				"c-headers-wrappers/StorageManagerWrapper.cpp"
+				"c-headers-wrappers/AuthenticationWrapper.hpp"
+				"c-headers-wrappers/AuthenticationWrapper.cpp")
 
 
 target_link_libraries(WeCycle ${CMAKE_SOURCE_DIR}/Firebase_libs/Debug/firebase_admob.lib 
