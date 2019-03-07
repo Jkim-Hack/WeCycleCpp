@@ -7,7 +7,7 @@ project ("WeCycle")
 
 # Include linked directories
 link_directories("Firebase libs" ${WinSDK})
-include_directories("firebase" ${WinSDK} "nlohmann")
+include_directories("firebase" ${WinSDK} "nlohmann" "cryptopp")
 
 # Include sub-projects.
 add_subdirectory ("WeCycle")

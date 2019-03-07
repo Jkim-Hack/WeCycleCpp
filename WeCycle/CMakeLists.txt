@@ -5,7 +5,7 @@ cmake_minimum_required (VERSION 3.8)
 
 # Include linked directories
 link_directories("Firebase_libs")
-include_directories(${PROJECT_SOURCE_DIR}/WeCycle ${PROJECT_SOURCE_DIR}/firebase ${PROJECT_SOURCE_DIR}/nlohmann ${PROJECT_SOURCE_DIR}/c-headers-wrappers)
+include_directories(${PROJECT_SOURCE_DIR}/WeCycle ${PROJECT_SOURCE_DIR}/firebase ${PROJECT_SOURCE_DIR}/nlohmann ${PROJECT_SOURCE_DIR}/cryptopp ${PROJECT_SOURCE_DIR}/c-headers-wrappers)
 
 
 # Add source to this project's executable.
