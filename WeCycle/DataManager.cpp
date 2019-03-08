@@ -1,7 +1,7 @@
 #include "DataManager.h"
 #include <iostream>
-#include <firebase\app.h>
-#include <firebase\variant.h>
+#include <firebase/app.h>
+#include <firebase/variant.h>
 
 //TODO: ADD AUTHENTICATION TO FIREBASE
 
@@ -17,7 +17,7 @@ DataManager::DataManager(FirebaseManager *fbManager) {
 
 //Called at the object's termination
 DataManager::~DataManager() {
-	delete database;
+	//delete database;
 }
 
 void DataManager::pushData(PushableObject *objectToPass, std::string parent) {

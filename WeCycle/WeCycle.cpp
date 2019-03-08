@@ -16,8 +16,8 @@
 
 int main() {
 
-	//const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
-	const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
+	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
+	//const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
 
 
 	FirebaseManager *fbManager = new FirebaseManager(filename);
@@ -39,10 +39,13 @@ int main() {
 		std::cout << dataRetrived[i] << std::endl;
 	}
 	*/
+	/*
+	Crypto *c = new Crypto(dataManager);
+	std::string s = c->hashSHAKE128("password");
+	std::cout << s << std::endl;
 
-	//Crypto *c = new Crypto();
-	//std::string s = c->encrypt("");
-
+	std::cout << c->verifySHAKE128("password", s) << std::endl;
+	*/
 	//delete c;
 	delete acc;
 	delete fbManager;

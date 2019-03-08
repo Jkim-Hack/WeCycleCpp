@@ -1,8 +1,9 @@
 #include "Authentication.h"
 
-Authentication::Authentication(FirebaseManager *fbManager) {
+Authentication::Authentication(FirebaseManager *fbManager, DataManager *dbManager) {
 	app = fbManager->getApp();
 	auth = firebase::auth::Auth::GetAuth(app);
+	crypto = Crypto(dbManager);
 }
 
 Authentication::~Authentication() {}
@@ -12,7 +13,7 @@ std::string Authentication::createAndRegisterAccount(Account *acc) {
 	std::string uID = "";
 
 	const char *email = strdup(acc->getEmail().c_str());
-	const char *password = strdup(acc->getPassword().c_str());
+	const char *password = crypto.hashSHAKE128(acc->getPassword()).c_str();
 
 	firebase::Future<firebase::auth::User*> result = auth->CreateUserWithEmailAndPassword(email, password);
 
@@ -34,7 +35,7 @@ std::string Authentication::createAndRegisterAccount(std::string emailO, std::st
 	std::string uID = "";
 
 	const char *email = strdup(emailO.c_str());
-	const char *password = strdup(passwordO.c_str());
+	const char *password = crypto.hashSHAKE128(passwordO).c_str();
 
 	firebase::Future<firebase::auth::User*> result = auth->CreateUserWithEmailAndPassword(email, password);
 
@@ -57,7 +58,7 @@ std::string Authentication::signInUser(Account *acc) {
 	std::string uID = "";
 
 	const char *email = strdup(acc->getEmail().c_str());
-	const char *password = strdup(acc->getPassword().c_str());
+	const char *password = crypto.hashSHAKE128(acc->getPassword()).c_str();
 
 	firebase::Future<firebase::auth::User*> result =
 		auth->SignInWithEmailAndPassword(email, password);
@@ -80,7 +81,7 @@ std::string Authentication::signInUser(std::string emailO, std::string passwordO
 	std::string uID = "";
 
 	const char *email = strdup(emailO.c_str());
-	const char *password = strdup(passwordO.c_str());
+	const char *password = crypto.hashSHAKE128(passwordO).c_str();
 
 	firebase::Future<firebase::auth::User*> result =
 		auth->SignInWithEmailAndPassword(email, password);

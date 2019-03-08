@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 3.8)
 project ("WeCycle")
 
 # Include linked directories
-link_directories("Firebase libs" ${WinSDK})
+link_directories("Firebase libs" ${WinSDK} "cryptopp_libs")
 include_directories("firebase" ${WinSDK} "nlohmann" "cryptopp")
 
 # Include sub-projects.

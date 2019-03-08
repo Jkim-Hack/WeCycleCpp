@@ -38,6 +38,7 @@ target_link_libraries(WeCycle ${CMAKE_SOURCE_DIR}/Firebase_libs/Debug/firebase_a
 						${CMAKE_SOURCE_DIR}/Firebase_libs/Debug/firebase_messaging.lib 
 						${CMAKE_SOURCE_DIR}/Firebase_libs/Debug/firebase_remote_config.lib 
 						${CMAKE_SOURCE_DIR}/Firebase_libs/Debug/firebase_storage.lib
+						${CMAKE_SOURCE_DIR}/cryptopp_libs/cryptlib.lib
 						${WinSDK}advapi32.lib
 						${WinSDK}ws2_32.lib
 						${WinSDK}crypt32.lib
