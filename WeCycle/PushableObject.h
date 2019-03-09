@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <map>
-#include <firebase\variant.h>
+#include <firebase/variant.h>
 
 //TODO SWITCH ALL VARAINTS TO TYPE STRING. CHANGE IT IN THE CPP FILE. THEN CREATE WRAPPERS
 
