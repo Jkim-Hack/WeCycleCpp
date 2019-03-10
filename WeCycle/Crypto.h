@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
 #include "DataManager.h"
-#include <cryptlib.h>
-#include <shake.h>
-#include <filters.h>
-#include <hex.h>
+#include "cryptlib.h"
+#include "shake.h"
+#include "filters.h"
+#include "hex.h"
 class Crypto {
 
 private:

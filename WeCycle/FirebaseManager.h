@@ -1,7 +1,7 @@
 #pragma once
-#include <firebase\app.h>
-#include <firebase\database.h>
-#include <json.hpp>
+#include <firebase/app.h>
+#include <firebase/database.h>
+#include "json.hpp"
 
 class FirebaseManager
 {
