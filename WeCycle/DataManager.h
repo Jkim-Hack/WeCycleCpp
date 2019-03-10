@@ -25,7 +25,6 @@ public:
 	const char **retrieveData(std::string parent, std::string key);
 	const char **retrieveData(std::string parent);
 	void retrieveData(std::string parent, firebase::Variant);
-	void retrieveData(std::string parent, std::string key, firebase::Variant[]);
 	void retrieveData(std::string parent, std::string key, firebase::Variant);
 	firebase::database::DatabaseReference getDBref();
 

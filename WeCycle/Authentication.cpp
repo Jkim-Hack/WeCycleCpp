@@ -47,8 +47,11 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 		if (result.error() == firebase::auth::kAuthErrorNone) {
 			firebase::auth::User* user = *result.result();
 			uID = user->uid();
-			firebase::Variant list[4];
+			firebase::Variant list;
 			dbManage->retrieveData("Account Info", uID, list);
+
+			
+
 			printf("Sign in succeeded for email %s\n", user->email().c_str());
 		}
 		else {
