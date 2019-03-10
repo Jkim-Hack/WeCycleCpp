@@ -11,7 +11,7 @@ class Authentication {
 
 private:
 	Crypto crypto;
-
+	DataManager *dbManage;
 public: 
 
 	firebase::auth::Auth* auth;
@@ -20,9 +20,7 @@ public:
 	Authentication(FirebaseManager *fbManager, DataManager *dbManager);
 	~Authentication();
 
-	std::string createAndRegisterAccount(Account *account); //Returns user ID
-	std::string createAndRegisterAccount(std::string email, std::string password); //Returns user ID
+	void createAndRegisterAccount(Account *acc, std::string emailO, std::string passwordO);
 
-	std::string signInUser(Account *account); //Returns user ID
-	std::string signInUser(std::string email, std::string password); //Returns user ID
+	void signInUser(Account *acc, std::string emailO, std::string passwordO);
 };
