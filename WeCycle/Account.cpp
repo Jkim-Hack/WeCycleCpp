@@ -98,13 +98,24 @@ void Account::updateXP(int increment, DataManager *dbm) {
 
 	firebase::Variant rankList;
 	dbm->retrieveData("Ranks", rankList);
-	if(checkXPforRank(dbm)){
 
+	if(checkXPforRank(dbm)){
+		updateRank(dbm);
 	}
 
 }
 void Account::updateCoins(int incremenet, DataManager *dbm) {
-
+	firebase::Variant accInfo;
+	dbm->retrieveData("Account Info", this->uid, accInfo);
+	if (accInfo.is_vector()) {
+		int currCoinCount = accInfo.vector()[2].int64_value;
+		currCoinCount += incremenet;
+		this->coins = currCoinCount;
+		std::map<std::string, firebase::Variant> accountMap;
+		accountMap.insert(std::pair<std::string, firebase::Variant>(this->uid, dataList));
+		this->initialize(accountMap);
+		dbm->pushData(this, "Account Info");
+	}
 }
 void Account::updatePFP(std::string link, DataManager *dbm) {
 
