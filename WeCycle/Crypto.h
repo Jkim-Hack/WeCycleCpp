@@ -5,6 +5,7 @@
 #include "shake.h"
 #include "filters.h"
 #include "hex.h"
+
 class Crypto {
 
 private:

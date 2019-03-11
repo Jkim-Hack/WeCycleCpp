@@ -1,6 +1,6 @@
 #include "PushableObjectWrapper.hpp"
 #include "PushableObject.h"
-#include "firebase\variant.h"
+#include "firebase/variant.h"
 
 const void *initializePushableObject() {
 	PushableObject *pushableObject = new PushableObject();
@@ -13,7 +13,7 @@ void addData(const void *object, const char *key, const char *mapKey, const char
 	map[mapKey] = mapValue;
 	pushableObject->addData(key,map);
 }
-//MAIN.C HAS COMPILE ERRORS HERE TRY TO FIX
+
 void initializeMap_basic(const void *object, const char *keyMap, const char *keyValue) {
 	
 	PushableObject *pushableObject = (PushableObject *)object;

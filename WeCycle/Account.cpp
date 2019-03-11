@@ -62,7 +62,7 @@ Account::Account(std::string rank, unsigned int experience, unsigned int coins, 
 	this->uid = uid;
 
 	VariantMap rankMap;
-	rankMap.insert(std::pair<std::string, std::string>("Rank", this->rank));
+	rankMap.insert(std::pair<std::string, std::string>("Rank", this->rank)); 
 	VariantMap experienceMap;
 	experienceMap.insert(std::pair<std::string, firebase::Variant>("Experience", this->experience));
 	VariantMap coinMap;
