@@ -23,7 +23,7 @@ int main() {
 	FirebaseManager *fbManager = new FirebaseManager(filename);
 	DataManager dataManager(fbManager);
 	StorageManager storageManager(fbManager);
-	Account *acc = new Account("C@droptablecom", "passwordE");
+//	Account *acc = new Account("C@droptablecom", "passwordE");
 	//Authentication auth(fbManager);
 	//auth.createAndRegisterAccount(acc);
 
@@ -47,7 +47,7 @@ int main() {
 	std::cout << c->verifySHAKE128("password", s) << std::endl;
 	*/
 	//delete c;
-	delete acc;
+	//delete acc;
 	delete fbManager;
 	//delete push;
 	//delete push1;

@@ -26,19 +26,19 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent) {
 	objectToPass->setKey(key);
 	//Accounts: multiple for loops that access each data point.
 	for (auto &x : objectToPass->dataMap()) {
-		std::string firstKey = x.first;
+		firebase::Variant firstKey = x.first;
 		if (x.second.is_vector()) {
 			for (auto &y : x.second.vector()) {
 				for (auto &z : y.map()) {
-					std::string keys = z.first.string_value();
+					firebase::Variant keys = z.first.string_value();
 					firebase::Variant values = z.second;
-					dbref.Child(parent).Child(firstKey).Child(keys).SetValue(values);
+					dbref.Child(parent).Child(firstKey.mutable_string()).Child(keys.mutable_string()).SetValue(values);
 				}
 			}
 		}
 		else {
 			firebase::Variant value = x.second;
-			dbref.Child(parent).Child(firstKey).SetValue(value);
+			dbref.Child(parent).Child(firstKey.mutable_string()).SetValue(value);
 		}
 	}
 

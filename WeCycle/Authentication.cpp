@@ -10,8 +10,6 @@ Authentication::Authentication(FirebaseManager *fbManager, DataManager *dbManage
 Authentication::~Authentication() {}
 
 void Authentication::createAndRegisterAccount(Account *acc, std::string emailO, std::string passwordO) {
-	
-	std::string uID = "";
 
 	const char *email = strdup(emailO.c_str());
 	const char *password = strdup(crypto.hashSHAKE128(passwordO).c_str());
@@ -21,7 +19,7 @@ void Authentication::createAndRegisterAccount(Account *acc, std::string emailO, 
 	if (result.status() == firebase::kFutureStatusComplete) {
 		if (result.error() == firebase::auth::kAuthErrorNone) {
 			firebase::auth::User *user = *result.result();
-			uID = user->uid();
+			std::string uID = user->uid();
 			acc = new Account(uID);
 			dbManage->pushData(acc, "Account Info");
 			std::cout << "Successfully created account: " << user->email() << std::endl;
@@ -35,8 +33,6 @@ void Authentication::createAndRegisterAccount(Account *acc, std::string emailO, 
 
 void Authentication::signInUser(Account *acc, std::string emailO, std::string passwordO) {
 
-	std::string uID = "";
-
 	const char *email = strdup(emailO.c_str());
 	const char *password = strdup(crypto.hashSHAKE128(passwordO).c_str());
 
@@ -46,12 +42,13 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 	if (result.status() == firebase::kFutureStatusComplete) {
 		if (result.error() == firebase::auth::kAuthErrorNone) {
 			firebase::auth::User* user = *result.result();
-			uID = user->uid();
+			std::string uID = user->uid();
 			firebase::Variant list;
 			dbManage->retrieveData("Account Info", uID, list);
-
-			
-
+			if (list.is_vector()) {
+				std::vector<firebase::Variant> dataList = list.vector();
+				acc = new Account(dataList, uID);
+			}
 			printf("Sign in succeeded for email %s\n", user->email().c_str());
 		}
 		else {

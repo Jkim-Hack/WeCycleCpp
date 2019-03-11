@@ -8,23 +8,12 @@ const void *initializeAuthentication(const void *fbManager, const void *dbManage
 	return (void *)auth;
 }
 
-const char* createAndRegisterAccount_account(const void *authObj, const void *auth, const void *account) {
+const void createAndRegisterAccount(const void *auth, const void *account, const char* email, const char* password) {
 	Authentication *authObject = (Authentication *)auth;
-	const char *result = authObject->createAndRegisterAccount((Account *)account).c_str();
-	return result;
+	authObject->createAndRegisterAccount((Account *)account, email, password);
 }
 
-const char* createAndRegisterAccount_string(const void *authObj, const void *auth, const char* email, const char* password) {
+const void signInUser(const void *auth, const void *account, const char* email, const char* password) {
 	Authentication *authObject = (Authentication *)auth;
-	return authObject->createAndRegisterAccount(email, password).c_str();
-}
-
-const char* signInUser_account(const void *authObj, const void *auth, const void  *account) {
-	Authentication *authObject = (Authentication *)auth;
-	return authObject->signInUser((Account *)account).c_str();
-}
-
-const char* signInUser_string(const void *authObj, const void *auth, const char* email, const char* password) {
-	Authentication *authObject = (Authentication *)auth;
-	return authObject->signInUser(email, password).c_str();
+	authObject->signInUser((Account *)account, email, password);
 }

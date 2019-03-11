@@ -2,7 +2,6 @@
 #include <firebase/app.h>
 #include <firebase/future.h>
 #include <firebase/database.h>
-#include "Account.h"
 #include "PushableObject.h"
 #include "FirebaseManager.h"
 
