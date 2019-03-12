@@ -1,6 +1,6 @@
 #pragma once
-#include<firebase\storage\listener.h>
-#include<firebase\storage\controller.h>
+#include<firebase/storage/listener.h>
+#include<firebase/storage/controller.h>
 
 using Controller = firebase::storage::Controller;
 

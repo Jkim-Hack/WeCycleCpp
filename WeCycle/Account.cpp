@@ -183,6 +183,10 @@ void Account::updatePFP(std::string link, DataManager *dbm) {
 
 }
 
+void Account::updateProfile(std::string displayName, std::string pfpLink, DataManager *dbm) {
+
+}
+
 bool Account::checkXPforRank(DataManager *dbm) {
 	firebase::Variant rankList;
 	dbm->retrieveData("Ranks", rankList);

@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
-#include <firebase\storage.h>
-#include <firebase\app.h>
-#include <firebase\future.h>
-#include <firebase\storage\metadata.h>
+#include <firebase/storage.h>
+#include <firebase/app.h>
+#include <firebase/future.h>
+#include <firebase/storage/metadata.h>
 #include "FirebaseManager.h"
 #include "StorageListener.h"
 
