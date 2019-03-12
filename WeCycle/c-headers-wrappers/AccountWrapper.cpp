@@ -25,3 +25,19 @@ const void updatePFP(const void *accountObj, const char* link, const void *dbMan
 	DataManager *dbm = (DataManager *)dbManager;
 	account->updatePFP(link, dbm);
 }
+const char* rank(const void *accountObj) {
+	Account *account = (Account *)accountObj;
+	return account->rankA();
+}
+const int experience(const void *accountObj) {
+	Account *account = (Account *)accountObj;
+	return account->experienceA();
+}
+const int coins(const void *accountObj) {
+	Account *account = (Account *)accountObj;
+	return account->coinsA();
+}
+const char* profilePicLink(const void *accountObj) {
+	Account *account = (Account *)accountObj;
+	return account->profilePicLinkA();
+}

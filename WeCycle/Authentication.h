@@ -5,12 +5,10 @@
 #include <iostream>
 #include <firebase/auth.h>
 #include <firebase/future.h>
-#include "Crypto.h"
 
 class Authentication {
 
 private:
-	Crypto crypto;
 	DataManager *dbManage;
 public: 
 

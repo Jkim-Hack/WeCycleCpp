@@ -32,9 +32,13 @@ public:
 
 	~Account();
 
+	const char* rankA() const;
+	int experienceA() const;
+	int coinsA() const;
+	const char* profilePicLinkA() const;
+
 	void updateRank(DataManager *dbm);
 	void updateXP(int increment, DataManager *dbm);
 	void updateCoins(int incremenet, DataManager *dbm);
 	void updatePFP(std::string link, DataManager *dbm);
 };
-

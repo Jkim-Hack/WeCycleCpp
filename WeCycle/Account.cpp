@@ -106,6 +106,19 @@ Account::Account(std::vector<firebase::Variant> dataList, std::string uid) {
 Account::~Account() {
 }
 
+const char* Account::rankA() const {
+	return this->rank.c_str();
+}
+int Account::experienceA() const {
+	return this->experience;
+}
+int Account::coinsA() const {
+	return this->coins;
+}
+const char* Account::profilePicLinkA() const {
+	return this->profilePicLink.c_str();
+}
+
 void Account::updateRank(DataManager *dbm) {
 	firebase::Variant rankList;
 	dbm->retrieveData("Ranks", rankList);

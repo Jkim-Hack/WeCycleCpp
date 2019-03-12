@@ -3,7 +3,6 @@
 Authentication::Authentication(FirebaseManager *fbManager, DataManager *dbManager) {
 	app = fbManager->getApp();
 	auth = firebase::auth::Auth::GetAuth(app);
-	crypto = Crypto(dbManager);
 	this->dbManage = dbManager;
 }
 
@@ -12,11 +11,11 @@ Authentication::~Authentication() {}
 void Authentication::createAndRegisterAccount(Account *acc, std::string emailO, std::string passwordO) {
 
 	const char *email = strdup(emailO.c_str());
-	const char *password = strdup(crypto.hashSHAKE128(passwordO).c_str());
+	const char *password = strdup(passwordO.c_str());
 
 	firebase::Future<firebase::auth::User*> result = auth->CreateUserWithEmailAndPassword(email, password);
 
-	if (result.status() == firebase::kFutureStatusComplete) {
+	while (result.status() != firebase::kFutureStatusComplete) {}
 		if (result.error() == firebase::auth::kAuthErrorNone) {
 			firebase::auth::User *user = *result.result();
 			std::string uID = user->uid();
@@ -27,19 +26,18 @@ void Authentication::createAndRegisterAccount(Account *acc, std::string emailO, 
 		else {
 			std::cout << "Error creating account..." << result.error_message() << std::endl;
 		}
-	}
 
 }
 
 void Authentication::signInUser(Account *acc, std::string emailO, std::string passwordO) {
 
 	const char *email = strdup(emailO.c_str());
-	const char *password = strdup(crypto.hashSHAKE128(passwordO).c_str());
+	const char *password = strdup(passwordO.c_str());
 
 	firebase::Future<firebase::auth::User*> result =
 		auth->SignInWithEmailAndPassword(email, password);
 
-	if (result.status() == firebase::kFutureStatusComplete) {
+	while (result.status() != firebase::kFutureStatusComplete) {}
 		if (result.error() == firebase::auth::kAuthErrorNone) {
 			firebase::auth::User* user = *result.result();
 			std::string uID = user->uid();
@@ -54,6 +52,5 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 		else {
 			printf("Sign in failed with error '%s'\n", result.error_message());
 		}
-	}
 
 }
