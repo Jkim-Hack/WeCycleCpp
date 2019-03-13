@@ -19,8 +19,8 @@ void Authentication::createAndRegisterAccount(Account *acc, std::string emailO, 
 		if (result.error() == firebase::auth::kAuthErrorNone) {
 			firebase::auth::User *user = *result.result();
 			std::string uID = user->uid();
-			acc = new Account(uID);
-			dbManage->pushData(acc, "Account Info");
+			acc->updateUID(uID);
+			dbManage->pushData(acc, "Account Info", uID);
 			std::cout << "Successfully created account: " << user->email() << std::endl;
 		}
 		else {
@@ -45,7 +45,8 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 			dbManage->retrieveData("Account Info", uID, list); //should return a list of maps
 			if (list.is_vector()) {
 				std::vector<firebase::Variant> dataList = list.vector();
-				acc = new Account(dataList, uID);
+				acc->updateUID(uID);
+				acc->updateDataList(dataList);
 			}
 			printf("Sign in succeeded for email %s\n", user->email().c_str());
 		}

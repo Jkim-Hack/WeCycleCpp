@@ -50,6 +50,36 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent) {
 
 }
 
+void DataManager::pushData(PushableObject *objectToPass, std::string parent, std::string child) {
+
+	for (auto &x : objectToPass->dataMap()) {
+		firebase::Variant firstKey = child;
+		if (x.second.is_vector()) {
+			std::string firstK = firstKey.mutable_string();
+			firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
+			while (future.status() != firebase::kFutureStatusComplete) {}
+			if (future.error() == 0) {
+				std::cout << "Push Successful" << std::endl;
+			}
+			else {
+				std::cout << "Push Failed" << future.error_message() << std::endl;
+			}
+		}
+		else {
+			firebase::Variant value = x.second;
+			firebase::Future<void> future = dbref.Child(parent).Child(firstKey.mutable_string()).SetValue(value);
+			while (future.status() != firebase::kFutureStatusComplete) {}
+			if (future.error() == 0) {
+				std::cout << "Push Successful" << std::endl;
+			}
+			else {
+				std::cout << "Push Failed" << future.error_message() << std::endl;
+			}
+		}
+	}
+
+}
+
 void DataManager::updateData(firebase::Variant objectToPass, std::string parent, std::string child) {//Object isnt of type map
 
 }
@@ -124,7 +154,7 @@ const char **DataManager::retrieveData(std::string parent) {
 	return resultArray;
 }
 
-void DataManager::retrieveData(std::string parent, firebase::Variant object) {
+void DataManager::retrieveData(std::string parent, firebase::Variant &object) {
 
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).GetValue();
 
@@ -155,7 +185,7 @@ void DataManager::retrieveData(std::string parent, firebase::Variant object) {
 	}
 }
 
-void DataManager::retrieveData(std::string parent, std::string key, firebase::Variant object) {
+void DataManager::retrieveData(std::string parent, std::string key, firebase::Variant &object) {
 
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).Child(key).GetValue();
 
@@ -165,8 +195,7 @@ void DataManager::retrieveData(std::string parent, std::string key, firebase::Va
 		firebase::Variant childList = result.result()->value();
 		std::vector<firebase::Variant> variantList;
 		if (childList.is_vector()) {
-			variantList = childList.vector();
-			object = variantList;
+			object = childList.vector();
 		}
 	}
 	else {
