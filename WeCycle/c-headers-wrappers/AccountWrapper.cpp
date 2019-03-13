@@ -1,29 +1,26 @@
 #include "AccountWrapper.hpp"
 #include "Account.h"
 
-const void *initializeAccount() {
-	Account *account = new Account();
+const void *initializeAccount(const void *dataManager) {
+	DataManager *dataM = (DataManager *)dataManager;
+	Account *account = new Account(dataM);
 	return (void *)account;
 }
-const void updateRank(const void *accountObj, const void *dbManager) {
+const void updateRank(const void *accountObj) {
 	Account *account = (Account *)accountObj;
-	DataManager *dbm = (DataManager *)dbManager;
-	account->updateRank(dbm);
+	account->updateRank();
 }
-const void updateXP(const void *accountObj, int increment, const void *dbManager) {
+const void updateXP(const void *accountObj, int increment) {
 	Account *account = (Account *)accountObj;
-	DataManager *dbm = (DataManager *)dbManager;
-	account->updateXP(increment, dbm);
+	account->updateXP(increment);
 }
-const void updateCoins(const void *accountObj, int incremenet, const void *dbManager) {
+const void updateCoins(const void *accountObj, int incremenet) {
 	Account *account = (Account *)accountObj;
-	DataManager *dbm = (DataManager *)dbManager;
-	account->updateCoins(incremenet, dbm);
+	account->updateCoins(incremenet);
 }
-const void updatePFP(const void *accountObj, const char* link, const void *dbManager) {
+const void updatePFP(const void *accountObj, const char* link) {
 	Account *account = (Account *)accountObj;
-	DataManager *dbm = (DataManager *)dbManager;
-	account->updatePFP(link, dbm);
+	account->updatePFP(link);
 }
 const char* rank(const void *accountObj) {
 	Account *account = (Account *)accountObj;

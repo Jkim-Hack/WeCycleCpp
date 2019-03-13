@@ -31,5 +31,5 @@ void updateUserProfile(const void *auth, const void *acc, const char* pfplink, c
 void updateUserPFPLink(const void *auth, const void *acc, const char* pfplink) {
 	Authentication *authObject = (Authentication *)auth;
 	Account *account = (Account *)acc;
-	authObject->updateUserProfile(account, pfplink);
+	authObject->updateUserPFPLink(account, pfplink);
 }

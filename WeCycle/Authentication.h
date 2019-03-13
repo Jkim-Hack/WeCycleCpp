@@ -5,6 +5,7 @@
 #include <iostream>
 #include <firebase/auth.h>
 #include <firebase/future.h>
+#include <ctime>
 
 class Authentication {
 
