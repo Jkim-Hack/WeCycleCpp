@@ -23,7 +23,6 @@ private:
 	std::string profilePicLink;
 	std::string display_name;
 	std::vector<std::map<firebase::Variant, firebase::Variant>> dataList;
-	std::vector<std::map<firebase::Variant, firebase::Variant>> achievementsList;
 	
 	bool checkXPforRank(DataManager *dbm);
 
