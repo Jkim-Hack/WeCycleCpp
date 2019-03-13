@@ -22,27 +22,50 @@ DataManager::~DataManager() {
 
 void DataManager::pushData(PushableObject *objectToPass, std::string parent) {
 	
-	std::string key = dbref.Child(parent).PushChild().key_string();
-	objectToPass->setKey(key);
-	//Accounts: multiple for loops that access each data point.
 	for (auto &x : objectToPass->dataMap()) {
 		firebase::Variant firstKey = x.first;
 		if (x.second.is_vector()) {
-			for (auto &y : x.second.vector()) {
-				for (auto &z : y.map()) {
-					firebase::Variant keys = z.first.string_value();
-					firebase::Variant values = z.second;
-					dbref.Child(parent).Child(firstKey.mutable_string()).Child(keys.mutable_string()).SetValue(values);
-				}
+			std::string firstK = firstKey.mutable_string();
+			firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
+			while (future.status() != firebase::kFutureStatusComplete){}
+			if (future.error() == 0) {
+				std::cout << "Push Successful" << std::endl;
+			}
+			else {
+				std::cout << "Push Failed" << future.error_message() <<std::endl;
 			}
 		}
 		else {
 			firebase::Variant value = x.second;
-			dbref.Child(parent).Child(firstKey.mutable_string()).SetValue(value);
+			firebase::Future<void> future = dbref.Child(parent).Child(firstKey.mutable_string()).SetValue(value);
+			while (future.status() != firebase::kFutureStatusComplete) {}
+			if (future.error() == 0) {
+				std::cout << "Push Successful" << std::endl;
+			}
+			else {
+				std::cout << "Push Failed" << future.error_message() << std::endl;
+			}
 		}
 	}
 
-	std::cout << "Push Successful" << std::endl; //TODO: LOOK AT FIREBASE DOCUMENTATION FOR CHECKING
+}
+
+void DataManager::updateData(firebase::Variant objectToPass, std::string parent, std::string child) {//Object isnt of type map
+
+}
+void DataManager::updateData(firebase::Variant objectToPass, std::string parent) { //Object isnt of type map
+
+}
+void DataManager::updateData(firebase::Variant objectToPass) { //Object is of type map
+	firebase::Future<void> future = dbref.UpdateChildren(objectToPass);
+	while (future.status() != firebase::kFutureStatusComplete) {}
+	if (future.error() == 0) {
+		printf("Updated!");
+	}
+	else {
+		printf("Failed to update: ");
+		printf(future.error_message());
+	}
 }
 
 const char **DataManager::retrieveData(std::string parent, std::string key) {
@@ -113,7 +136,16 @@ void DataManager::retrieveData(std::string parent, firebase::Variant object) {
 		std::vector<firebase::Variant> variantList;
 		int counter = 0;
 		for (auto &values : childList) { //Iterate through the vector of STRING VALUE
-			variantList[counter] = values.value(); 
+			firebase::Variant value = values.value();
+			if (value.is_mutable_string()) {
+				variantList[counter] = value.mutable_string();
+			}
+			else if (value.is_int64()) {
+				variantList[counter] = value.int64_value();
+			}
+			else if (value.is_bool()) {
+				variantList[counter] = value.bool_value();
+			}
 			counter++;
 		}
 		object = variantList;
@@ -130,15 +162,12 @@ void DataManager::retrieveData(std::string parent, std::string key, firebase::Va
 	while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete
 	if (result.error() == firebase::database::kErrorNone) {
 		std::cout << "Retrival Complete" << std::endl;
-
-		std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
+		firebase::Variant childList = result.result()->value();
 		std::vector<firebase::Variant> variantList;
-		int counter = 0;
-		for (auto &values : childList) { //Iterate through the vector of STRING VALUE
-			variantList[counter] = values.value();
-			counter++;
+		if (childList.is_vector()) {
+			variantList = childList.vector();
+			object = variantList;
 		}
-		object = variantList;
 	}
 	else {
 		std::cout << "Error Retrieving Data" << std::endl;

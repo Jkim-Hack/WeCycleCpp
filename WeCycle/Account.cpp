@@ -5,7 +5,9 @@ Account::Account() {
 	this->experience = 0;
 	this->coins = 0;
 	this->profilePicLink = "";
+	this->display_name = "";
 	this->uid = "";
+
 
 	VariantMap rankMap;
 	rankMap.insert(std::pair<firebase::Variant, firebase::Variant>("Rank", this->rank));
@@ -15,14 +17,19 @@ Account::Account() {
 	coinMap.insert(std::pair<firebase::Variant, firebase::Variant>("Coins", this->coins));
 	VariantMap profilePicMap;
 	profilePicMap.insert(std::pair<firebase::Variant, firebase::Variant>("PFP Link", this->profilePicLink));
+	VariantMap displayNameMap;
+	displayNameMap.insert(std::pair<firebase::Variant, firebase::Variant>("Display Name", this->display_name));
 
-	dataList.push_back(profilePicMap);
-	dataList.push_back(coinMap);
-	dataList.push_back(experienceMap);
 	dataList.push_back(rankMap);
+	dataList.push_back(experienceMap);
+	dataList.push_back(coinMap);
+	dataList.push_back(profilePicMap);
+	dataList.push_back(displayNameMap);
 
 	std::map<firebase::Variant, firebase::Variant> accountMap;
 	accountMap.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, dataList));
+
+
 
 	this->initialize(accountMap);
 }
@@ -32,6 +39,7 @@ Account::Account(std::string uid) {
 	this->experience = 0;
 	this->coins = 0;
 	this->profilePicLink = "";
+	this->display_name = "";
 	this->uid = uid;
 
 	VariantMap rankMap;
@@ -42,12 +50,14 @@ Account::Account(std::string uid) {
 	coinMap.insert(std::pair<firebase::Variant, firebase::Variant>("Coins", this->coins));
 	VariantMap profilePicMap;
 	profilePicMap.insert(std::pair<firebase::Variant, firebase::Variant>("PFP Link", this->profilePicLink));
+	VariantMap displayNameMap;
+	displayNameMap.insert(std::pair<firebase::Variant, firebase::Variant>("Display Name", this->display_name));
 
-	dataList.push_back(profilePicMap);
-	dataList.push_back(coinMap);
-	dataList.push_back(experienceMap);
 	dataList.push_back(rankMap);
-
+	dataList.push_back(experienceMap);
+	dataList.push_back(coinMap);
+	dataList.push_back(profilePicMap);
+	dataList.push_back(displayNameMap);
 	std::map<firebase::Variant, firebase::Variant> accountMap;
 	accountMap.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, dataList));
 
@@ -59,6 +69,7 @@ Account::Account(std::string rank, unsigned int experience, unsigned int coins, 
 	this->experience = experience;
 	this->coins = coins;
 	this->profilePicLink = profilePicLink;
+	this->display_name = "";
 	this->uid = uid;
 
 	VariantMap rankMap;
@@ -69,11 +80,14 @@ Account::Account(std::string rank, unsigned int experience, unsigned int coins, 
 	coinMap.insert(std::pair<std::string, firebase::Variant>("Coins", this->coins));
 	VariantMap profilePicMap;
 	profilePicMap.insert(std::pair<std::string, std::string>("PFP Link", this->profilePicLink));
+	VariantMap displayNameMap;
+	displayNameMap.insert(std::pair<firebase::Variant, firebase::Variant>("Display Name", this->display_name));
 
-	dataList.push_back(profilePicMap);
-	dataList.push_back(coinMap);
-	dataList.push_back(experienceMap);
 	dataList.push_back(rankMap);
+	dataList.push_back(experienceMap);
+	dataList.push_back(coinMap);
+	dataList.push_back(profilePicMap);
+	dataList.push_back(displayNameMap);
 
 	std::map<firebase::Variant, firebase::Variant> accountMap;
 	accountMap.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, dataList));
@@ -173,6 +187,11 @@ void Account::updateCoins(int incremenet, DataManager *dbm) {
 		int currCoinCount = accInfo.vector()[2].int64_value();
 		currCoinCount += incremenet;
 		this->coins = currCoinCount;
+
+		VariantMap coinMap;
+		coinMap.insert(std::pair<firebase::Variant, firebase::Variant>("Coins", this->coins));
+		dataList.at(2) = coinMap;
+
 		std::map<firebase::Variant, firebase::Variant> accountMap;
 		accountMap.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, dataList));
 		this->initialize(accountMap);
@@ -180,11 +199,22 @@ void Account::updateCoins(int incremenet, DataManager *dbm) {
 	}
 }
 void Account::updatePFP(std::string link, DataManager *dbm) {
-
+	this->profilePicLink = link;
+	VariantMap profilePicMap;
+	std::string path = "/Account Info/" + this->uid + "/3/PFP Link";
+	profilePicMap.insert(std::pair<std::string, std::string>(path, this->profilePicLink));
+	this->dataList.at(3) = profilePicMap;
+	dbm->updateData(profilePicMap);
 }
 
-void Account::updateProfile(std::string displayName, std::string pfpLink, DataManager *dbm) {
+void Account::updateDisplayName(std::string displayName, DataManager *dbm) {
 
+	this->display_name = displayName;
+	VariantMap displayNameMap;
+	std::string path = "/Account Info/" + this->uid + "/4/Display Name";
+	displayNameMap.insert(std::pair<firebase::Variant, firebase::Variant>(path, this->display_name));
+	dataList.at(4) = displayNameMap;
+	dbm->updateData(displayNameMap);
 }
 
 bool Account::checkXPforRank(DataManager *dbm) {

@@ -22,35 +22,16 @@ int main() {
 
 	FirebaseManager *fbManager = new FirebaseManager(filename);
 	DataManager *dataManager = new DataManager(fbManager);
-	StorageManager storageManager(fbManager);
-//	Account *acc = new Account("C@droptablecom", "passwordE");
-	//Authentication auth(fbManager);
-	//auth.createAndRegisterAccount(acc);
+	//StorageManager storageManager(fbManager);
 
-	//const std::string link = storageManager.uploadImageRetreiveLink("C:/Users/Kim/Desktop/image.jpg");
-	//std::cout << link << std::endl;
-	/*
-	dataManager.pushData(acc, "Account");
+	Authentication auth(fbManager, dataManager);
+	Account *acc = new Account();
+	auth.createAndRegisterAccount(acc, "jkim@test.com", "passwordfE");
+	auth.updateUserProfile(acc, "https://firebasestorage.googleapis.com/v0/b/wecycle-316c1.appspot.com/o/Gial_Ackbar_Resistance.jpg?alt=media&token=1059357a-f84f-4185-a798-7f6c7b730778"
+	, "Jkim");
 
-	const char **dataRetrived = dataManager.retrieveData("Account", "C@droptablecom");
-
-	for (size_t i = 0; i < 2; i++)
-	{
-		std::cout << dataRetrived[i] << std::endl;
-	}
-	*/
-	
-	Crypto *c = new Crypto(dataManager);
-	std::string s = c->hashSHAKE128("password");
-	std::cout << s << std::endl;
-
-	std::cout << c->verifySHAKE128("password", s) << std::endl;
-	
-	//delete c;
-	//delete acc;
 	delete fbManager;
-	//delete push;
-	//delete push1;
+	delete dataManager;
 
 	system("pause");
 

@@ -21,6 +21,11 @@ public:
 	~DataManager(); //Called at the object's termination
 
 	void pushData(PushableObject *objectToPass, std::string parent);
+	void updateData(firebase::Variant objectToPass, std::string parent, std::string child);
+	void updateData(firebase::Variant objectToPass, std::string parent);
+	void updateData(firebase::Variant objectToPass);
+
+
 	const char **retrieveData(std::string parent, std::string key);
 	const char **retrieveData(std::string parent);
 	void retrieveData(std::string parent, firebase::Variant);

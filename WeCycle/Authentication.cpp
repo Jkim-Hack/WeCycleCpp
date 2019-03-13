@@ -42,7 +42,7 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 			firebase::auth::User* user = *result.result();
 			std::string uID = user->uid();
 			firebase::Variant list;
-			dbManage->retrieveData("Account Info", uID, list);
+			dbManage->retrieveData("Account Info", uID, list); //should return a list of maps
 			if (list.is_vector()) {
 				std::vector<firebase::Variant> dataList = list.vector();
 				acc = new Account(dataList, uID);
@@ -53,4 +53,45 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 			printf("Sign in failed with error '%s'\n", result.error_message());
 		}
 
+}
+
+void Authentication::signOutUser() {
+	auth->SignOut();
+}
+
+void Authentication::updateUserProfile(Account *acc, const char* pfplink, const char* displayname) {
+	firebase::auth::User *user = auth->current_user();
+	if (user != nullptr) {
+		firebase::auth::User::UserProfile profile;
+		profile.display_name = displayname;
+		profile.photo_url = pfplink;
+		firebase::Future<void> future = user->UpdateUserProfile(profile);
+		while (future.status() != firebase::kFutureStatusComplete) {}
+		if (future.error() == 0) {
+			printf("Updated user profile");
+		}
+		else {
+			printf("Failed to update user profile");
+		}
+		acc->updatePFP(profile.photo_url, dbManage);
+		acc->updateDisplayName(profile.display_name, dbManage);
+	}
+}
+void Authentication::updateUserPFPLink(Account *acc, const char* pfplink) {
+	firebase::auth::User *user = auth->current_user();
+	if (user != nullptr) {
+		firebase::auth::User::UserProfile profile;
+		profile.photo_url = pfplink;
+		printf(user->display_name().c_str());
+		profile.display_name = _strdup(user->display_name().c_str());
+		firebase::Future<void> future = user->UpdateUserProfile(profile);
+		while (future.status() != firebase::kFutureStatusComplete) {}
+		if (future.error() == 0) {
+			printf("Updated user profile pic link");
+		}
+		else {
+			printf("Failed to update user profile pic link");
+		}
+		acc->updatePFP(profile.photo_url, dbManage);
+	}
 }

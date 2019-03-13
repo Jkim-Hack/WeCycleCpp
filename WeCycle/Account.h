@@ -2,6 +2,8 @@
 #include <iostream>
 #include "DataManager.h"
 #include "PushableObject.h"
+#include <firebase/auth.h>
+#include <firebase/future.h>
 
 
 using stringMap = std::map<std::string, std::string>;
@@ -21,14 +23,15 @@ private:
 	std::string profilePicLink;
 	std::string display_name;
 	std::vector<std::map<firebase::Variant, firebase::Variant>> dataList;
-
+	std::vector<std::map<firebase::Variant, firebase::Variant>> achievementsList;
+	
 	bool checkXPforRank(DataManager *dbm);
 
 public:
 	Account();
 	Account(std::string uid);
 	Account(std::string rank, unsigned int experience, unsigned int coins, std::string profilePicLink, std::string uid);
-	Account(std::vector<firebase::Variant> dataList, std::string uid);
+	Account(std::vector<firebase::Variant> dataList, std::string uid); 
 	//TODO add intialize override function and addData function
 
 	~Account();
@@ -43,5 +46,5 @@ public:
 	void updateCoins(int incremenet, DataManager *dbm);
 	void updatePFP(std::string link, DataManager *dbm);
 
-	void updateProfile(std::string displayName, std::string pfpLink, DataManager *dbm);
+	void updateDisplayName(std::string displayName, DataManager *dbm);
 };

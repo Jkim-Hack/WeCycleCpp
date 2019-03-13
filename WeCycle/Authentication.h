@@ -19,6 +19,9 @@ public:
 	~Authentication();
 
 	void createAndRegisterAccount(Account *acc, std::string emailO, std::string passwordO);
-
 	void signInUser(Account *acc, std::string emailO, std::string passwordO);
+	void signOutUser();
+
+	void updateUserProfile(Account *acc, const char* pfplink, const char* displayname);
+	void updateUserPFPLink(Account *acc, const char* pfplink);
 };
