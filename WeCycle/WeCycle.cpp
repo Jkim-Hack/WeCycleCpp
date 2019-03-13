@@ -25,10 +25,9 @@ int main() {
 	//StorageManager storageManager(fbManager);
 
 	Authentication auth(fbManager, dataManager);
-	Account *acc = new Account();
-	auth.createAndRegisterAccount(acc, "jkim@test.com", "passwordfE");
-	auth.updateUserProfile(acc, "https://firebasestorage.googleapis.com/v0/b/wecycle-316c1.appspot.com/o/Gial_Ackbar_Resistance.jpg?alt=media&token=1059357a-f84f-4185-a798-7f6c7b730778"
-	, "Jkim");
+	Account acc;
+	auth.signInUser(&acc, "jkim@test.com", "passwordfE");
+	auth.updateUserPFPLink(&acc, "https://firebasestorage.googleapis.com/v0/b/wecycle-316c1.appspot.com/o/Gial_Ackbar_Resistance.jpg?alt=media&token=1059357a-f84f-4185-a798-7f6c7b730778");
 
 	delete fbManager;
 	delete dataManager;

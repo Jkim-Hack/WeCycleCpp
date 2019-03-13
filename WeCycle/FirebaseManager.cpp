@@ -1,7 +1,7 @@
 #include "FirebaseManager.h"
 #include <iostream>
 #include <fstream> 
-#include <firebase\app.h>
+#include <firebase/app.h>
 
 
 FirebaseManager::FirebaseManager(const char* filename) {

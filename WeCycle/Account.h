@@ -41,6 +41,9 @@ public:
 	int coinsA() const;
 	const char* profilePicLinkA() const;
 
+
+	void updateUID(std::string uID);
+	void updateDataList(std::vector<firebase::Variant> dataList);
 	void updateRank(DataManager *dbm);
 	void updateXP(int increment, DataManager *dbm);
 	void updateCoins(int incremenet, DataManager *dbm);
