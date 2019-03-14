@@ -37,7 +37,10 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 	firebase::Future<firebase::auth::User*> result =
 		auth->SignInWithEmailAndPassword(email, password);
 
-	while (result.status() != firebase::kFutureStatusComplete) {}
+	//while (result.status() != firebase::kFutureStatusComplete) {}
+
+	result.OnCompletion(
+		[](const firebase::Future<firebase::auth::User*>& result) {
 		if (result.error() == firebase::auth::kAuthErrorNone) {
 			firebase::auth::User* user = *result.result();
 			std::string uID = user->uid();
@@ -53,6 +56,7 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 		else {
 			printf("Sign in failed with error '%s'\n", result.error_message());
 		}
+	});
 
 }
 
