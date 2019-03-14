@@ -6,21 +6,27 @@ const void *initializeAccount(const void *dataManager) {
 	Account *account = new Account(dataM);
 	return (void *)account;
 }
-const void updateRank(const void *accountObj) {
+void updateCheckAccount(const void *accountObj, bool res) {
+	Account *account = (Account *)accountObj;
+}
+void updateRank(const void *accountObj) {
 	Account *account = (Account *)accountObj;
 	account->updateRank();
 }
-const void updateXP(const void *accountObj, int increment) {
+void updateXP(const void *accountObj, int increment) {
 	Account *account = (Account *)accountObj;
 	account->updateXP(increment);
 }
-const void updateCoins(const void *accountObj, int incremenet) {
+void updateCoins(const void *accountObj, int incremenet) {
 	Account *account = (Account *)accountObj;
 	account->updateCoins(incremenet);
 }
-const void updatePFP(const void *accountObj, const char* link) {
+void updatePFP(const void *accountObj, const char* link) {
 	Account *account = (Account *)accountObj;
 	account->updatePFP(link);
+}
+const bool checkAccount(const void *accountObj) {
+	Account *account = (Account *)accountObj;
 }
 const char* rank(const void *accountObj) {
 	Account *account = (Account *)accountObj;

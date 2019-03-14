@@ -8,6 +8,7 @@ Account::Account(DataManager *dbm) {
 	this->display_name = "";
 	this->uid = "";
 	this->dbm = dbm;
+	this->checkAccount = false;
 
 	VariantMap rankMap;
 	rankMap.insert(std::pair<firebase::Variant, firebase::Variant>("Rank", this->rank));
@@ -42,7 +43,7 @@ Account::Account(DataManager *dbm, std::string uid) {
 	this->display_name = "";
 	this->uid = uid;
 	this->dbm = dbm;
-
+	this->checkAccount = false;
 
 	VariantMap rankMap;
 	rankMap.insert(std::pair<firebase::Variant, firebase::Variant>("Rank", this->rank));
@@ -74,7 +75,7 @@ Account::Account(DataManager *dbm, std::string rank, unsigned int experience, un
 	this->display_name = "";
 	this->uid = uid;
 	this->dbm = dbm;
-
+	this->checkAccount = false;
 
 	VariantMap rankMap;
 	rankMap.insert(std::pair<std::string, std::string>("Rank", this->rank)); 
@@ -115,7 +116,7 @@ Account::Account(DataManager *dbm, std::vector<firebase::Variant> dataList, std:
 	this->profilePicLink = this->dataList[3].find("PFP Link")->second.mutable_string();
 	this->uid = uid;
 	this->dbm = dbm;
-
+	this->checkAccount = false;
 
 	std::map<firebase::Variant, firebase::Variant> accountMap;
 	accountMap.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, dataList));
@@ -126,6 +127,9 @@ Account::Account(DataManager *dbm, std::vector<firebase::Variant> dataList, std:
 Account::~Account() {
 }
 
+bool Account::checkAccountA() const {
+	return this->checkAccount;
+}
 const char* Account::rankA() const {
 	return this->rank.c_str();
 }
@@ -139,6 +143,9 @@ const char* Account::profilePicLinkA() const {
 	return this->profilePicLink.c_str();
 }
 
+void Account::updateCheckAccount(bool res) {
+	this->checkAccount = res;
+}
 void Account::createNewAccount(std::string uID) {
 	this->uid = uID;
 	dbm->pushData(this, "Account Info", uID);

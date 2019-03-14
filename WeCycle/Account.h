@@ -25,6 +25,7 @@ private:
 	std::vector<std::map<firebase::Variant, firebase::Variant>> dataList;
 	DataManager *dbm;
 	bool checkXPforRank();
+	bool checkAccount;
 
 public:
 	Account(DataManager *dbm);
@@ -35,11 +36,13 @@ public:
 
 	~Account();
 
+	bool checkAccountA() const;
 	const char* rankA() const;
 	int experienceA() const;
 	int coinsA() const;
 	const char* profilePicLinkA() const;
 
+	void updateCheckAccount(bool res);
 	void createNewAccount(std::string uID);
 	void updateUID(std::string uID);
 	void updateDataList();

@@ -16,29 +16,21 @@ void Authentication::createAndRegisterAccount(Account *acc, std::string emailO, 
 	firebase::Future<firebase::auth::User*> result = auth->CreateUserWithEmailAndPassword(email, password);
 
 	result.OnCompletion([](const firebase::Future<firebase::auth::User*>& result, void* user_data) {
+		std::cout << "reuslt completed" << std::endl;
 		if (result.error() == firebase::auth::kAuthErrorNone) {
 			Account *acc = static_cast<Account *>(user_data);
 			firebase::auth::User *user = *result.result();
 			std::string uID = user->uid();
 			acc->createNewAccount(uID);
+			acc->updateCheckAccount(true);
 			std::cout << "Successfully created account: " << user->email() << std::endl;
 		}
 		else {
+			Account *acc = static_cast<Account *>(user_data);
+			acc->updateCheckAccount(false);
 			std::cout << "Error creating account..." << result.error_message() << std::endl;
 		}
 	}, acc);
-
-	std::clock_t start;
-	double duration = 0;
-	start = std::clock();
-	while (duration != 10000) {
-		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-		if (result.result_void() != nullptr) {
-			return;
-		}
-	}
-	std::cout << "Failed to create user" << std::endl;
-
 }
 
 void Authentication::signInUser(Account *acc, std::string emailO, std::string passwordO) {
@@ -51,28 +43,21 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 
 	result.OnCompletion([](const firebase::Future<firebase::auth::User*>& result, void* user_data) {
 		if (result.error() == firebase::auth::kAuthErrorNone) {
+			std::cout << "reuslt completed" << std::endl;
 			Account *acc = static_cast<Account *>(user_data);
 			firebase::auth::User* user = *result.result();
 			std::string uID = user->uid();
 			acc->updateUID(uID);
 			acc->updateDataList();
+			acc->updateCheckAccount(true);
 			printf("Sign in succeeded for email %s\n", user->email().c_str());
 		}
 		else {
+			Account *acc = static_cast<Account *>(user_data);
+			acc->updateCheckAccount(false);
 			printf("Sign in failed with error '%s'\n", result.error_message());
 		}
 	}, acc);
-
-	std::clock_t start;
-	double duration = 0;
-	start = std::clock();
-	while (duration != 10000) {
-		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-		if (result.result_void() != nullptr) {
-			return;
-		}
-	}
-	std::cout << "Failed to sign in user" << std::endl;
 }
 
 void Authentication::signOutUser() {
