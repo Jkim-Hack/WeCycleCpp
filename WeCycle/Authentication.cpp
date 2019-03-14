@@ -15,18 +15,22 @@ void Authentication::createAndRegisterAccount(Account *acc, std::string emailO, 
 
 	firebase::Future<firebase::auth::User*> result = auth->CreateUserWithEmailAndPassword(email, password);
 
-	while (result.status() != firebase::kFutureStatusComplete) {}
+	result.OnCompletion([](const firebase::Future<firebase::auth::User*>& result, void* user_data) {
+		std::cout << "reuslt completed" << std::endl;
 		if (result.error() == firebase::auth::kAuthErrorNone) {
+			Account *acc = static_cast<Account *>(user_data);
 			firebase::auth::User *user = *result.result();
 			std::string uID = user->uid();
-			acc->updateUID(uID);
-			dbManage->pushData(acc, "Account Info", uID);
+			acc->createNewAccount(uID);
+			acc->updateCheckAccount(true);
 			std::cout << "Successfully created account: " << user->email() << std::endl;
 		}
 		else {
+			Account *acc = static_cast<Account *>(user_data);
+			acc->updateCheckAccount(false);
 			std::cout << "Error creating account..." << result.error_message() << std::endl;
 		}
-
+	}, acc);
 }
 
 void Authentication::signInUser(Account *acc, std::string emailO, std::string passwordO) {
@@ -39,24 +43,24 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 
 	//while (result.status() != firebase::kFutureStatusComplete) {}
 
-	result.OnCompletion(
-		[](const firebase::Future<firebase::auth::User*>& result) {
+
+	result.OnCompletion([](const firebase::Future<firebase::auth::User*>& result, void* user_data) {
 		if (result.error() == firebase::auth::kAuthErrorNone) {
+			std::cout << "reuslt completed" << std::endl;
+			Account *acc = static_cast<Account *>(user_data);
 			firebase::auth::User* user = *result.result();
 			std::string uID = user->uid();
-			firebase::Variant list;
-			dbManage->retrieveData("Account Info", uID, list); //should return a list of maps
-			if (list.is_vector()) {
-				std::vector<firebase::Variant> dataList = list.vector();
-				acc->updateUID(uID);
-				acc->updateDataList(dataList);
-			}
+			acc->updateUID(uID);
+			acc->updateDataList();
+			acc->updateCheckAccount(true);
 			printf("Sign in succeeded for email %s\n", user->email().c_str());
 		}
 		else {
+			Account *acc = static_cast<Account *>(user_data);
+			acc->updateCheckAccount(false);
 			printf("Sign in failed with error '%s'\n", result.error_message());
 		}
-	});
+	}, acc);
 
 }
 
@@ -71,15 +75,15 @@ void Authentication::updateUserProfile(Account *acc, const char* pfplink, const 
 		profile.display_name = displayname;
 		profile.photo_url = pfplink;
 		firebase::Future<void> future = user->UpdateUserProfile(profile);
-		while (future.status() != firebase::kFutureStatusComplete) {}
+		while (future.status() != firebase::kFutureStatusComplete);
 		if (future.error() == 0) {
 			printf("Updated user profile");
 		}
 		else {
 			printf("Failed to update user profile");
 		}
-		acc->updatePFP(profile.photo_url, dbManage);
-		acc->updateDisplayName(profile.display_name, dbManage);
+		acc->updatePFP(profile.photo_url);
+		acc->updateDisplayName(profile.display_name);
 	}
 }
 void Authentication::updateUserPFPLink(Account *acc, const char* pfplink) {
@@ -90,13 +94,13 @@ void Authentication::updateUserPFPLink(Account *acc, const char* pfplink) {
 		printf(user->display_name().c_str());
 		profile.display_name = _strdup(user->display_name().c_str());
 		firebase::Future<void> future = user->UpdateUserProfile(profile);
-		while (future.status() != firebase::kFutureStatusComplete) {}
+		while (future.status() != firebase::kFutureStatusComplete);
 		if (future.error() == 0) {
 			printf("Updated user profile pic link");
 		}
 		else {
 			printf("Failed to update user profile pic link");
 		}
-		acc->updatePFP(profile.photo_url, dbManage);
+		acc->updatePFP(profile.photo_url);
 	}
 }

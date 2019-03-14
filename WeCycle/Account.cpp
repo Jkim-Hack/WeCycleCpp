@@ -1,13 +1,14 @@
 #include "Account.h"
 
-Account::Account() {
+Account::Account(DataManager *dbm) {
 	this->rank = "";
 	this->experience = 0;
 	this->coins = 0;
 	this->profilePicLink = "";
 	this->display_name = "";
 	this->uid = "";
-
+	this->dbm = dbm;
+	this->checkAccount = false;
 
 	VariantMap rankMap;
 	rankMap.insert(std::pair<firebase::Variant, firebase::Variant>("Rank", this->rank));
@@ -34,13 +35,15 @@ Account::Account() {
 	this->initialize(accountMap);
 }
 
-Account::Account(std::string uid) {
+Account::Account(DataManager *dbm, std::string uid) {
 	this->rank = "";
 	this->experience = 0;
 	this->coins = 0;
 	this->profilePicLink = "";
 	this->display_name = "";
 	this->uid = uid;
+	this->dbm = dbm;
+	this->checkAccount = false;
 
 	VariantMap rankMap;
 	rankMap.insert(std::pair<firebase::Variant, firebase::Variant>("Rank", this->rank));
@@ -64,13 +67,15 @@ Account::Account(std::string uid) {
 	this->initialize(accountMap);
 }
 
-Account::Account(std::string rank, unsigned int experience, unsigned int coins, std::string profilePicLink, std::string uid) {
+Account::Account(DataManager *dbm, std::string rank, unsigned int experience, unsigned int coins, std::string profilePicLink, std::string uid) {
 	this->rank = rank;
 	this->experience = experience;
 	this->coins = coins;
 	this->profilePicLink = profilePicLink;
 	this->display_name = "";
 	this->uid = uid;
+	this->dbm = dbm;
+	this->checkAccount = false;
 
 	VariantMap rankMap;
 	rankMap.insert(std::pair<std::string, std::string>("Rank", this->rank)); 
@@ -95,7 +100,7 @@ Account::Account(std::string rank, unsigned int experience, unsigned int coins, 
 	this->initialize(accountMap);
 }
 
-Account::Account(std::vector<firebase::Variant> dataList, std::string uid) {
+Account::Account(DataManager *dbm, std::vector<firebase::Variant> dataList, std::string uid) {
 	int count = 0;
 	for (auto &x : dataList) {
 		if (x.is_map()) {
@@ -110,6 +115,8 @@ Account::Account(std::vector<firebase::Variant> dataList, std::string uid) {
 	this->coins = this->dataList[2].find("Coins")->second.int64_value();
 	this->profilePicLink = this->dataList[3].find("PFP Link")->second.mutable_string();
 	this->uid = uid;
+	this->dbm = dbm;
+	this->checkAccount = false;
 
 	std::map<firebase::Variant, firebase::Variant> accountMap;
 	accountMap.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, dataList));
@@ -120,6 +127,9 @@ Account::Account(std::vector<firebase::Variant> dataList, std::string uid) {
 Account::~Account() {
 }
 
+bool Account::checkAccountA() const {
+	return this->checkAccount;
+}
 const char* Account::rankA() const {
 	return this->rank.c_str();
 }
@@ -133,18 +143,29 @@ const char* Account::profilePicLinkA() const {
 	return this->profilePicLink.c_str();
 }
 
+void Account::updateCheckAccount(bool res) {
+	this->checkAccount = res;
+}
+void Account::createNewAccount(std::string uID) {
+	this->uid = uID;
+	dbm->pushData(this, "Account Info", uID);
+}
 void Account::updateUID(std::string uID) {
 	this->uid = uID;
 }
-void Account::updateDataList(std::vector<firebase::Variant> dataList) { //UID MUST BE ALREADY INTIALIZED IN ORDER FOR THIS TO WORK
-	int count = 0;
-	for (auto &x : dataList) {
-		if (x.is_map()) {
-			for (auto &y : x.map()) {
-				this->dataList.at(count) = x.map();
-			}
+void Account::updateDataList() { //UID MUST BE ALREADY INTIALIZED IN ORDER FOR THIS TO WORK
+	firebase::Variant dataList;
+	dbm->retrieveData("Account Info", this->uid, dataList);
+	if (dataList.is_vector()) {
+		int count = 0;
+		for (auto &x : dataList.vector()) {
+			if (x.is_map()) {
+				for (auto &y : x.map()) {
+					this->dataList.at(count) = x.map();
+				}
+			}	
+			count++;
 		}
-		count++;
 	}
 	this->rank = this->dataList[0].find("Rank")->second.mutable_string();
 	this->experience = this->dataList[1].find("Experience")->second.int64_value();
@@ -162,7 +183,7 @@ void Account::updateDataList(std::vector<firebase::Variant> dataList) { //UID MU
 	this->initialize(accountMap);
 }
 
-void Account::updateRank(DataManager *dbm) {
+void Account::updateRank() {
 	firebase::Variant rankList;
 	dbm->retrieveData("Ranks", rankList);
 
@@ -189,7 +210,7 @@ void Account::updateRank(DataManager *dbm) {
 	}
 
 }
-void Account::updateXP(int increment, DataManager *dbm) {
+void Account::updateXP(int increment) {
 	this->experience += increment;
 	VariantMap experienceMap;
 	std::string path = "/Account Info/" + this->uid + "/1/Experience";
@@ -198,12 +219,12 @@ void Account::updateXP(int increment, DataManager *dbm) {
 	firebase::Variant rankList;
 	dbm->retrieveData("Ranks", rankList);
 
-	if(checkXPforRank(dbm)){
-		updateRank(dbm);
+	if(checkXPforRank()){
+		updateRank();
 	}
 
 }
-void Account::updateCoins(int incremenet, DataManager *dbm) {
+void Account::updateCoins(int incremenet) {
 	firebase::Variant accInfo;
 	dbm->retrieveData("Account Info", this->uid, accInfo);
 	if (accInfo.is_vector()) {
@@ -218,7 +239,7 @@ void Account::updateCoins(int incremenet, DataManager *dbm) {
 		dbm->updateData(coinMap);
 	}
 }
-void Account::updatePFP(std::string link, DataManager *dbm) {
+void Account::updatePFP(std::string link) {
 	this->profilePicLink = link;
 	VariantMap profilePicMap;
 	std::string path = "/Account Info/" + this->uid + "/3/PFP Link";
@@ -227,7 +248,7 @@ void Account::updatePFP(std::string link, DataManager *dbm) {
 	dbm->updateData(profilePicMap);
 }
 
-void Account::updateDisplayName(std::string displayName, DataManager *dbm) {
+void Account::updateDisplayName(std::string displayName) {
 
 	this->display_name = displayName;
 	VariantMap displayNameMap;
@@ -237,7 +258,7 @@ void Account::updateDisplayName(std::string displayName, DataManager *dbm) {
 	dbm->updateData(displayNameMap);
 }
 
-bool Account::checkXPforRank(DataManager *dbm) {
+bool Account::checkXPforRank() {
 	firebase::Variant rankList;
 	dbm->retrieveData("Ranks", rankList);
 	bool result = false;
