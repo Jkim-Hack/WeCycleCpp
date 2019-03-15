@@ -28,25 +28,26 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent) {
 		if (x.second.is_vector()) {
 			std::string firstK = firstKey.mutable_string();
 			firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
-			while (future.status() != firebase::kFutureStatusComplete){}
-
-			if (future.error() == 0) {
-				std::cout << "Push Successful" << std::endl;
-			}
-			else {
-				std::cout << "Push Failed" << future.error_message() <<std::endl;
-			}
+			future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
+				if (future.error() == 0) {
+					std::cout << "Push Successful" << std::endl;
+				}
+				else {
+					std::cout << "Push Failed" << future.error_message() << std::endl;
+				}
+			}, nullptr);
 		}
 		else {
 			firebase::Variant value = x.second;
 			firebase::Future<void> future = dbref.Child(parent).Child(firstKey.mutable_string()).SetValue(value);
-			while (future.status() != firebase::kFutureStatusComplete) {}
-			if (future.error() == 0) {
-				std::cout << "Push Successful" << std::endl;
-			}
-			else {
-				std::cout << "Push Failed" << future.error_message() << std::endl;
-			}
+			future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
+				if (future.error() == 0) {
+					std::cout << "Push Successful" << std::endl;
+				}
+				else {
+					std::cout << "Push Failed" << future.error_message() << std::endl;
+				}
+			}, nullptr);
 		}
 	}
 
@@ -59,8 +60,8 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent, std
 		if (x.second.is_vector()) {
 			std::string firstK = firstKey.mutable_string();
 			firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
-			while (future.status() != firebase::kFutureStatusComplete) {}
-			/*
+			//while (future.status() != firebase::kFutureStatusComplete) {}
+			
 			future.OnCompletion([](const firebase::Future<void>& result, void* user_data) {
 				if (result.error() == 0) {
 					std::cout << "Push Successful" << std::endl;
@@ -70,18 +71,19 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent, std
 				}
 			
 			}, nullptr);
-			*/
+			
 		}
 		else {
 			firebase::Variant value = x.second;
 			firebase::Future<void> future = dbref.Child(parent).Child(firstKey.mutable_string()).SetValue(value);
-			while (future.status() != firebase::kFutureStatusComplete) {}
-			if (future.error() == 0) {
-				std::cout << "Push Successful" << std::endl;
-			}
-			else {
-				std::cout << "Push Failed" << future.error_message() << std::endl;
-			}
+			future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
+				if (future.error() == 0) {
+					std::cout << "Push Successful" << std::endl;
+				}
+				else {
+					std::cout << "Push Failed" << future.error_message() << std::endl;
+				}
+			}, nullptr);
 		}
 	}
 
@@ -95,70 +97,15 @@ void DataManager::updateData(firebase::Variant objectToPass, std::string parent)
 }
 void DataManager::updateData(firebase::Variant objectToPass) { //Object is of type map
 	firebase::Future<void> future = dbref.UpdateChildren(objectToPass);
-	while (future.status() != firebase::kFutureStatusComplete) {}
-	if (future.error() == 0) {
-		printf("Updated!");
-	}
-	else {
-		printf("Failed to update: ");
-		printf(future.error_message());
-	}
-}
-
-const char **DataManager::retrieveData(std::string parent, std::string key) {
-
-	const char **resultArray = nullptr;
-
-	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).Child(key).GetValue();
-
-		while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete
-		if (result.error() == firebase::database::kErrorNone) {
-			std::cout << "Retrival Complete" << std::endl;
-
-			std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
-
-			unsigned int heightMax = childList.size();
-			resultArray = new const char*[heightMax];
-
-			int counter = 0;
-			for (auto &values : childList) { //Iterate through the vector of STRING VALUE
-				resultArray[counter] = strdup(values.value().string_value());  //strdup makes sure our char in the memory stays in the memory even when out of scope by creating a duplicate char array (string
-				counter++;
-			}
-		} 
+	future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
+		if (future.error() == 0) {
+			printf("Updated!");
+		}
 		else {
-			std::cout << "Error Retrieving Data" << std::endl;
+			printf("Failed to update: ");
+			printf(future.error_message());
 		}
-
-	return resultArray;
-}
-
-const char **DataManager::retrieveData(std::string parent) {
-
-	const char **resultArray = nullptr;
-
-	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).GetValue();
-
-	while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete
-	if (result.error() == firebase::database::kErrorNone) {
-		std::cout << "Retrival Complete" << std::endl;
-
-		std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
-
-		unsigned int heightMax = childList.size();
-		resultArray = new const char*[heightMax];
-
-		int counter = 0;
-		for (auto &values : childList) { //Iterate through the vector of STRING VALUE
-			resultArray[counter] = strdup(values.value().string_value());  //strdup makes sure our char in the memory stays in the memory even when out of scope by creating a duplicate char array (string
-			counter++;
-		}
-	}
-	else {
-		std::cout << "Error Retrieving Data" << std::endl;
-	}
-
-	return resultArray;
+	}, nullptr);
 }
 
 void DataManager::retrieveData(std::string parent, firebase::Variant &object) {
@@ -185,6 +132,9 @@ void DataManager::retrieveData(std::string parent, firebase::Variant &object) {
 				}
 				else if (value.is_bool()) {
 					variantList[counter] = value.bool_value();
+				}
+				else if (value.is_map()) {
+					variantList[counter] = value.map();
 				}
 				counter++;
 			}

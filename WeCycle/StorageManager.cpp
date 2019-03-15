@@ -26,14 +26,15 @@ const char *StorageManager::uploadImageRetreiveLink(std::string filepath) {
 	firebase::Future<firebase::storage::Metadata> futureUpload = image_ref.PutFile(filePath, listenerPtr, controller);
 
 	//TODO: TRY TO CLEAN WHILE LOOPS
+	futureUpload.OnCompletion([](const firebase::Future<firebase::storage::Metadata>& futureUpload, void* user_data) {
+		if (futureUpload.error() == 0) {
+			std::cout << "Upload Complete" << std::endl;
 
-	while (futureUpload.status() != firebase::kFutureStatusComplete) {} //Loop to wait until upload is complete
-	if (futureUpload.error() == 0) {
-		std::cout << "Upload Complete" << std::endl;
-	}
-	else {
-		std::cout << "Error" << std::endl;
-	}
+		}
+		else {
+			std::cout << "Error" << std::endl;
+		}
+	}, nullptr);
 
 	firebase::storage::StorageReference download_ref = storage_ref.Child("images/image.jpg");
 	firebase::Future<std::string> futureDownloadLink = download_ref.GetDownloadUrl();

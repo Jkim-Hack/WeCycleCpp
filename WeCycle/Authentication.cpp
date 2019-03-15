@@ -95,9 +95,9 @@ void Authentication::updateUserProfile(Account *acc, const char* pfplink, const 
 			else {
 				printf("Failed to update user profile");
 			}
-			acc->updatePFP(profile.photo_url);
-			acc->updateDisplayName(profile.display_name);
 		}, acc);
+		acc->updatePFP(profile.photo_url);
+		acc->updateDisplayName(profile.display_name);
 	}
 }
 void Authentication::updateUserPFPLink(Account *acc, const char* pfplink) {
@@ -106,15 +106,16 @@ void Authentication::updateUserPFPLink(Account *acc, const char* pfplink) {
 		firebase::auth::User::UserProfile profile;
 		profile.photo_url = pfplink;
 		printf(user->display_name().c_str());
-		profile.display_name = _strdup(user->display_name().c_str());
+		profile.display_name = strdup(user->display_name().c_str());
 		firebase::Future<void> future = user->UpdateUserProfile(profile);
-		while (future.status() != firebase::kFutureStatusComplete);
-		if (future.error() == 0) {
-			printf("Updated user profile pic link");
-		}
-		else {
-			printf("Failed to update user profile pic link");
-		}
+		future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
+			if (future.error() == 0) {
+				printf("Updated user profile pic link");
+			}
+			else {
+				printf("Failed to update user profile pic link");
+			}
+		}, nullptr);
 		acc->updatePFP(profile.photo_url);
 	}
 }

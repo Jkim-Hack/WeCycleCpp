@@ -28,8 +28,6 @@ public:
 	void updateData(firebase::Variant objectToPass);
 
 
-	const char **retrieveData(std::string parent, std::string key);
-	const char **retrieveData(std::string parent);
 	void retrieveData(std::string parent, firebase::Variant &object);
 	void retrieveData(std::string parent, std::string key, firebase::Variant &object);
 	firebase::database::DatabaseReference getDBref();

@@ -8,9 +8,9 @@ Crypto::Crypto() {
 
 }
 void Crypto::acquireSaltConfiguration(DataManager *dbManager) {
-	const char** salts = dbManager->retrieveData("s4lT");
-	salt0 = salts[0];
-	salt1 = salts[1];
+	//const char** salts = dbManager->retrieveData("s4lT");
+	//salt0 = salts[0];
+	//salt1 = salts[1];
 }
 
 std::string Crypto::hashSHAKE128(std::string stringToEncrypt) {

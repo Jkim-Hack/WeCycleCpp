@@ -189,24 +189,24 @@ void Account::updateRank() {
 
 	if (rankList.is_vector()) {
 		std::vector<firebase::Variant> list = rankList.vector();
-		int i = 0;
-		while (list.at(i).is_map()) {
-			std::map<firebase::Variant, firebase::Variant> currentMap = list.at(i).map();
-			for (auto &x : currentMap) {
-				if (x.first == this->rank) {
-					for (auto &y : list.at(i + 1).map()) {
-						this->rank = y.first.mutable_string();
-						VariantMap rankMap;
-						std::string path = "/Account Info/" + this->uid + "/0/Rank";
-						rankMap.insert(std::pair<std::string, std::string>(path, this->rank));
-						this->dataList.at(0) = rankMap; //0 is rank position
-						dbm->updateData(rankMap);
-						return;
+		for (int i = 0; i < list.size(); i++) {
+			if (i != list.size()) {
+				std::map<firebase::Variant, firebase::Variant> currentMap = list.at(i).map();
+				for (auto &x : currentMap) {
+					if (x.first == this->rank) {
+						for (auto &y : list.at(i + 1).map()) {
+							this->rank = y.first.mutable_string();
+							VariantMap rankMap;
+							std::string path = "/Account Info/" + this->uid + "/0/Rank";
+							rankMap.insert(std::pair<std::string, std::string>(path, this->rank));
+							this->dataList.at(0) = rankMap; //0 is rank position
+							dbm->updateData(rankMap);
+							return;
+						} //End of map iteration
 					}
-				}
-			}
-			i++;
-		}
+				} //End of map iteration
+			} 
+		} //End of list iteration
 	}
 
 }
@@ -265,7 +265,7 @@ bool Account::checkXPforRank() {
 	if (rankList.is_vector()) {
 		std::vector<firebase::Variant> list = rankList.vector();
 		int i = 0;
-		while (list.at(i).is_map()) {
+		while (list.at(i).is_map() && list.size() != i) {
 			std::map<firebase::Variant, firebase::Variant> currentMap = list.at(i).map();
 			for (auto &x : currentMap) {
 				if (x.first == this->rank) {
