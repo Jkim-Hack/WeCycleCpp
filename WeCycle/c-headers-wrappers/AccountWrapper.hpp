@@ -4,6 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <stdbool.h>
 	const void *initializeAccount(const void *dataManager);
 	void updateCheckAccount(const void *accountObj, bool res);
 	void updateRank(const void *accountObj);

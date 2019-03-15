@@ -1,5 +1,6 @@
 ﻿// WeCycle.cpp : Defines the entry point for the application.
 //
+#ifdef _WIN32
 
 #include "WeCycle.h"
 #include "DataManager.h"
@@ -26,7 +27,7 @@ int main() {
 
 	Authentication auth(fbManager, dataManager);
 	Account acc(dataManager);
-	auth.signInUser(&acc, "ts6t3@test.com", "passwordfE");
+	auth.signInUser(&acc, "jkim@gmail.com", "password");
 	auth.updateUserProfile(&acc, "https://firebasestorage.googleapis.com/v0/b/wecycle-316c1.appspot.com/o/Gial_Ackbar_Resistance.jpg?alt=media&token=1059357a-f84f-4185-a798-7f6c7b730778"
 	,"tester");
 
@@ -37,3 +38,4 @@ int main() {
 
 	return 0;
 }
+#endif // _WIN32

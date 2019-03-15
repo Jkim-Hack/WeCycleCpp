@@ -2,6 +2,7 @@
 #include <iostream>
 #include <firebase/app.h>
 #include <firebase/variant.h>
+#include <ctime>
 
 //TODO: ADD AUTHENTICATION TO FIREBASE
 
@@ -189,18 +190,34 @@ void DataManager::retrieveData(std::string parent, std::string key, firebase::Va
 
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).Child(key).GetValue();
 
-	while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete
-	if (result.error() == firebase::database::kErrorNone) {
-		std::cout << "Retrival Complete" << std::endl;
-		firebase::Variant childList = result.result()->value();
-		std::vector<firebase::Variant> variantList;
-		if (childList.is_vector()) {
-			object = childList.vector();
+	//while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete
+
+	firebase::Variant *ob = &object;
+
+	result.OnCompletion([](const firebase::Future<firebase::database::DataSnapshot>& result, void* user_data) {
+		if (result.error() == firebase::database::kErrorNone) {
+			std::cout << "Retrival Complete" << std::endl;
+			firebase::Variant childList = result.result()->value();
+			firebase::Variant ob = static_cast<firebase::Variant*>(user_data);
+			if (childList.is_vector()) {
+				ob = childList.vector();
+			}
+		}
+		else {
+			std::cout << "Error Retrieving Data" << std::endl;
+		}
+	}, ob);
+#ifdef _WIN32
+	std::clock_t start;
+	double duration = 0;
+	start = std::clock();
+	while (duration != 5000) {
+		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+		if (result.result_void() != nullptr) {
+			return;
 		}
 	}
-	else {
-		std::cout << "Error Retrieving Data" << std::endl;
-	}
+#endif // _WIN32
 }
 
 firebase::database::DatabaseReference DataManager::getDBref() {

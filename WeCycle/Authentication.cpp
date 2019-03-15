@@ -46,7 +46,7 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 
 	result.OnCompletion([](const firebase::Future<firebase::auth::User*>& result, void* user_data) {
 		if (result.error() == firebase::auth::kAuthErrorNone) {
-			std::cout << "reuslt completed" << std::endl;
+			std::cout << "result completed" << std::endl;
 			Account *acc = static_cast<Account *>(user_data);
 			firebase::auth::User* user = *result.result();
 			std::string uID = user->uid();
@@ -61,6 +61,17 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 			printf("Sign in failed with error '%s'\n", result.error_message());
 		}
 	}, acc);
+#ifdef _WIN32
+	std::clock_t start;
+	double duration = 0;
+	start = std::clock();
+	while (duration != 5000) {
+		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+		if (result.result_void() != nullptr) {
+			return;
+		}
+	}
+#endif // _WIN32
 
 }
 

@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
 #include "DataManager.h"
+#ifdef _WIN32
 #include "cryptlib.h"
+#endif //_WIN32
 #include "shake.h"
 #include "filters.h"
 #include "hex.h"

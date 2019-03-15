@@ -8,6 +8,7 @@ const void *initializeAccount(const void *dataManager) {
 }
 void updateCheckAccount(const void *accountObj, bool res) {
 	Account *account = (Account *)accountObj;
+	account->updateCheckAccount(res);
 }
 void updateRank(const void *accountObj) {
 	Account *account = (Account *)accountObj;
@@ -27,6 +28,7 @@ void updatePFP(const void *accountObj, const char* link) {
 }
 const bool checkAccount(const void *accountObj) {
 	Account *account = (Account *)accountObj;
+	return account->checkAccountA();
 }
 const char* rank(const void *accountObj) {
 	Account *account = (Account *)accountObj;
