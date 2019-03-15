@@ -29,6 +29,7 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent) {
 			std::string firstK = firstKey.mutable_string();
 			firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
 			while (future.status() != firebase::kFutureStatusComplete){}
+
 			if (future.error() == 0) {
 				std::cout << "Push Successful" << std::endl;
 			}
@@ -59,12 +60,17 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent, std
 			std::string firstK = firstKey.mutable_string();
 			firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
 			while (future.status() != firebase::kFutureStatusComplete) {}
-			if (future.error() == 0) {
-				std::cout << "Push Successful" << std::endl;
-			}
-			else {
-				std::cout << "Push Failed" << future.error_message() << std::endl;
-			}
+			/*
+			future.OnCompletion([](const firebase::Future<void>& result, void* user_data) {
+				if (result.error() == 0) {
+					std::cout << "Push Successful" << std::endl;
+				}
+				else {
+					std::cout << "Push Failed" << result.error_message() << std::endl;
+				}
+			
+			}, nullptr);
+			*/
 		}
 		else {
 			firebase::Variant value = x.second;
@@ -159,31 +165,46 @@ void DataManager::retrieveData(std::string parent, firebase::Variant &object) {
 
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).GetValue();
 
-	while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete //TODO add a runtime exception
-	if (result.error() == firebase::database::kErrorNone) {
-		std::cout << "Retrival Complete" << std::endl;
+	firebase::Variant *ob = &object;
+	//while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete //TODO add a runtime exception
+	result.OnCompletion([](const firebase::Future<firebase::database::DataSnapshot>& result, void* user_data) {
+		firebase::Variant ob = static_cast<firebase::Variant*>(user_data);
+		if (result.error() == firebase::database::kErrorNone) {
+			std::cout << "Retrival Complete" << std::endl;
 
-		std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
-		std::vector<firebase::Variant> variantList;
-		int counter = 0;
-		for (auto &values : childList) { //Iterate through the vector of STRING VALUE
-			firebase::Variant value = values.value();
-			if (value.is_mutable_string()) {
-				variantList[counter] = value.mutable_string();
+			std::vector<firebase::database::DataSnapshot> childList = result.result()->children();
+			std::vector<firebase::Variant> variantList;
+			int counter = 0;
+			for (auto &values : childList) { //Iterate through the vector of STRING VALUE
+				firebase::Variant value = values.value();
+				if (value.is_mutable_string()) {
+					variantList[counter] = value.mutable_string();
+				}
+				else if (value.is_int64()) {
+					variantList[counter] = value.int64_value();
+				}
+				else if (value.is_bool()) {
+					variantList[counter] = value.bool_value();
+				}
+				counter++;
 			}
-			else if (value.is_int64()) {
-				variantList[counter] = value.int64_value();
-			}
-			else if (value.is_bool()) {
-				variantList[counter] = value.bool_value();
-			}
-			counter++;
+			ob = &variantList;
 		}
-		object = variantList;
+		else {
+			std::cout << "Error Retrieving Data" << std::endl;
+		}
+	}, ob);
+#ifdef _WIN32
+	std::clock_t start;
+	double duration = 0;
+	start = std::clock();
+	while (duration != 5000) {
+		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+		if (result.result_void() != nullptr) {
+			return;
+		}
 	}
-	else {
-		std::cout << "Error Retrieving Data" << std::endl;
-	}
+#endif // _WIN32
 }
 
 void DataManager::retrieveData(std::string parent, std::string key, firebase::Variant &object) {
