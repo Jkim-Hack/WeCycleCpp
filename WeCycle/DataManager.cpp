@@ -27,15 +27,19 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent) {
 		firebase::Variant firstKey = x.first;
 		if (x.second.is_vector()) {
 			std::string firstK = firstKey.mutable_string();
-			firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
-			future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
-				if (future.error() == 0) {
-					std::cout << "Push Successful" << std::endl;
-				}
-				else {
-					std::cout << "Push Failed" << future.error_message() << std::endl;
-				}
-			}, nullptr);
+			try {
+				firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
+				future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
+					if (future.error() == 0) {
+						std::cout << "Push Successful" << std::endl;
+					}
+					else {
+						std::cout << "Push Failed" << future.error_message() << std::endl;
+					}
+				}, nullptr);
+			} catch (std::exception &e) {
+				std::cout << e.what() << std::endl;
+			}
 		}
 		else {
 			firebase::Variant value = x.second;
@@ -59,18 +63,20 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent, std
 		firebase::Variant firstKey = child;
 		if (x.second.is_vector()) {
 			std::string firstK = firstKey.mutable_string();
-			firebase::Future<void> future = dbref.Child(parent).Child(child).SetValue(x.second);
-			//while (future.status() != firebase::kFutureStatusComplete) {}
-			
-			future.OnCompletion([](const firebase::Future<void>& result, void* user_data) {
-				if (result.error() == 0) {
-					std::cout << "Push Successful" << std::endl;
-				}
-				else {
-					std::cout << "Push Failed" << result.error_message() << std::endl;
-				}
-			
-			}, nullptr);
+			try {
+				firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
+				future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
+					if (future.error() == 0) {
+						std::cout << "Push Successful" << std::endl;
+					}
+					else {
+						std::cout << "Push Failed" << future.error_message() << std::endl;
+					}
+				}, nullptr);
+			}
+			catch (std::exception &e) {
+				std::cout << e.what() << std::endl;
+			}
 			
 		}
 		else {

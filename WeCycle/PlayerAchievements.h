@@ -1,5 +1,4 @@
 #pragma once
-#ifdef _WIN32
 #include <iostream>
 #include "DataManager.h"
 #include "PushableObject.h"
@@ -25,4 +24,3 @@ public:
 	PlayerAchievements(DataManager *dbm, std::string uid);
 	void addAchievement(Account *acc, std::string achievementID);
 };
-#endif //_WIN32
