@@ -7,6 +7,7 @@ extern "C" {
 #include <stdbool.h>
 	const void *initializeAccount(const void *dataManager);
 	void updateCheckAccount(const void *accountObj, bool res);
+	void updateRank_override(const void *accountObj, const char* rank);
 	void updateRank(const void *accountObj);
 	void updateXP(const void *accountObj, int increment);
 	void updateCoins(const void *accountObj, int incremenet);

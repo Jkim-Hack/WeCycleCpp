@@ -22,6 +22,7 @@ private:
 	int coins;
 	std::string profilePicLink;
 	std::string display_name;
+	int numberOfScans;
 	std::vector<std::map<firebase::Variant, firebase::Variant>> dataList;
 	DataManager *dbm;
 	bool checkXPforRank();
@@ -41,15 +42,18 @@ public:
 	int experienceA() const;
 	int coinsA() const;
 	const char* profilePicLinkA() const;
+	const char* displaynameA() const;
+	int numberOfScansA() const;
 
 	void updateCheckAccount(bool res);
 	void createNewAccount(std::string uID);
 	void updateUID(std::string uID);
 	void updateDataList();
+	void updateRank_override(const char* rank);
 	void updateRank();
 	void updateXP(int increment);
 	void updateCoins(int incremenet);
 	void updatePFP(std::string link);
-
 	void updateDisplayName(std::string displayName);
+	void updateScans(int increment);
 };

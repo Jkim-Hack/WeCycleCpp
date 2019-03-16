@@ -10,6 +10,10 @@ void updateCheckAccount(const void *accountObj, bool res) {
 	Account *account = (Account *)accountObj;
 	account->updateCheckAccount(res);
 }
+void updateRank_override(const void *accountObj, const char* rank) {
+	Account *account = (Account *)accountObj;
+	account->updateRank_override(rank);
+}
 void updateRank(const void *accountObj) {
 	Account *account = (Account *)accountObj;
 	account->updateRank();

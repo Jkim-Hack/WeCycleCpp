@@ -12,7 +12,6 @@ FirebaseManager::FirebaseManager(const char* filename) {
 	app = firebase::App::Create(appOptions);
 
 #else
-	appOps->LoadFromJsonConfig(filename, &appOptions);
 	app = firebase::App::Create();
 #endif //  _WIN32
 	if (app != nullptr)

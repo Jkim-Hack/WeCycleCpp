@@ -6,6 +6,7 @@ Account::Account(DataManager *dbm) {
 	this->coins = 0;
 	this->profilePicLink = "";
 	this->display_name = "";
+	this->numberOfScans = 0;
 	this->uid = "";
 	this->dbm = dbm;
 	this->checkAccount = false;
@@ -20,6 +21,8 @@ Account::Account(DataManager *dbm) {
 	profilePicMap.insert(std::pair<firebase::Variant, firebase::Variant>("PFP Link", this->profilePicLink));
 	VariantMap displayNameMap;
 	displayNameMap.insert(std::pair<firebase::Variant, firebase::Variant>("Display Name", this->display_name));
+	VariantMap numberOfScansMap;
+	numberOfScansMap.insert(std::pair<firebase::Variant, firebase::Variant>("Number of Scans", this->numberOfScans));
 
 	dataList.push_back(rankMap);
 	dataList.push_back(experienceMap);
@@ -142,6 +145,14 @@ int Account::coinsA() const {
 const char* Account::profilePicLinkA() const {
 	return this->profilePicLink.c_str();
 }
+const char* Account::displaynameA() const {
+	return this->display_name.c_str();
+}
+int Account::numberOfScansA() const {
+	return this->numberOfScans;
+}
+
+
 
 void Account::updateCheckAccount(bool res) {
 	this->checkAccount = res;
@@ -181,6 +192,15 @@ void Account::updateDataList() { //UID MUST BE ALREADY INTIALIZED IN ORDER FOR T
 	accountMap.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, dataList));
 
 	this->initialize(accountMap);
+}
+
+void Account::updateRank_override(const char* rank) {
+	this->rank = rank;
+	VariantMap rankMap;
+	std::string path = "/Account Info/" + this->uid + "/0/Rank";
+	rankMap.insert(std::pair<std::string, std::string>(path, this->rank));
+	this->dataList.at(0) = rankMap; //0 is rank position
+	dbm->updateData(rankMap);
 }
 
 void Account::updateRank() {
@@ -256,6 +276,10 @@ void Account::updateDisplayName(std::string displayName) {
 	displayNameMap.insert(std::pair<firebase::Variant, firebase::Variant>(path, this->display_name));
 	dataList.at(4) = displayNameMap;
 	dbm->updateData(displayNameMap);
+}
+
+void Account::updateScans(int increment) {
+	this->numberOfScans += increment;
 }
 
 bool Account::checkXPforRank() {
