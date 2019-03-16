@@ -61,17 +61,7 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 			printf("Sign in failed with error '%s'\n", result.error_message());
 		}
 	}, acc);
-#ifdef _WIN32
-	std::clock_t start;
-	double duration = 0;
-	start = std::clock();
-	while (duration != 5000) {
-		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-		if (result.result_void() != nullptr) {
-			return;
-		}
-	}
-#endif // _WIN32
+
 
 }
 

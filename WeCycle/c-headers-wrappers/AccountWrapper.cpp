@@ -30,6 +30,10 @@ void updatePFP(const void *accountObj, const char* link) {
 	Account *account = (Account *)accountObj;
 	account->updatePFP(link);
 }
+void updateScans(const void *accountObj, int increment) {
+	Account *account = (Account *)accountObj;
+	account->updateScans(increment);
+}
 const bool checkAccount(const void *accountObj) {
 	Account *account = (Account *)accountObj;
 	return account->checkAccountA();
@@ -49,4 +53,8 @@ const int coins(const void *accountObj) {
 const char* profilePicLink(const void *accountObj) {
 	Account *account = (Account *)accountObj;
 	return account->profilePicLinkA();
+}
+const int numberOfScans(const void *accountObj) {
+	Account *account = (Account *)accountObj;
+	return account->numberOfScansA();
 }

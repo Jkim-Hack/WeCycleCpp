@@ -19,6 +19,10 @@ PlayerAchievements::PlayerAchievements(DataManager *dbm, std::string uid)
 	this->initialize(map);
 }
 
+void obtainData(DataManager *dbm, std::string achievements, std::string achievementID, firebase::Variant achievementList) {
+	return dbm->retrieveData(achievements, achievementID, achievementList);
+}
+
 void PlayerAchievements::addAchievement(Account *acc, std::string achievementID) 
 {
 
@@ -29,9 +33,9 @@ void PlayerAchievements::addAchievement(Account *acc, std::string achievementID)
 	map.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, this->achievementsList));
 	this->initialize(map1);
 
-	firebase::Variant achievementList; //Vector of variants
-	std::future<void> future = std::async(this->dbm->retrieveData, "Achievements", achievementID, achievementList);
-	std::future_status status = future.wait_for(std::chrono::milliseconds(2000));
+	firebase::Variant achievementList; //Vector of variants1
+	std::future<void> future = std::async(std::launch::async, obtainData, this->dbm, "Achievements", achievementID, achievementList);
+	std::future_status status = future.wait_for(std::chrono::seconds(2));
 	while (status != std::future_status::ready);
 	
 	if (achievementList.is_vector()) {
@@ -47,4 +51,5 @@ void PlayerAchievements::addAchievement(Account *acc, std::string achievementID)
 
 	dbm->pushData(this, "User Achievements");
 }
+
 #endif //_WIN32

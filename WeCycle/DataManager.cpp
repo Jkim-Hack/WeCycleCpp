@@ -59,7 +59,7 @@ void DataManager::pushData(PushableObject *objectToPass, std::string parent, std
 		firebase::Variant firstKey = child;
 		if (x.second.is_vector()) {
 			std::string firstK = firstKey.mutable_string();
-			firebase::Future<void> future = dbref.Child(parent).Child(firstK).SetValue(x.second);
+			firebase::Future<void> future = dbref.Child(parent).Child(child).SetValue(x.second);
 			//while (future.status() != firebase::kFutureStatusComplete) {}
 			
 			future.OnCompletion([](const firebase::Future<void>& result, void* user_data) {
@@ -182,7 +182,7 @@ void DataManager::retrieveData(std::string parent, std::string key, firebase::Va
 	std::clock_t start;
 	double duration = 0;
 	start = std::clock();
-	while (duration != 5000) {
+	while (duration != 3000) {
 		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 		if (result.result_void() != nullptr) {
 			return;
