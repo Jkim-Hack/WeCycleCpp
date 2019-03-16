@@ -170,7 +170,7 @@ void Account::updateCheckAccount(bool res) {
 }
 void Account::createNewAccount(std::string uID) {
 	this->uid = uID;
-	dbm->pushData(this, "Account Info", uID);
+	this->dbm->pushData(this, "Account Info", uID);
 }
 void Account::updateUID(std::string uID) {
 	this->uid = uID;

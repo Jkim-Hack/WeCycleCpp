@@ -12,6 +12,7 @@
 #include <fstream> 
 #include "Authentication.h"
 #include "Crypto.h"
+#include "PlayerAchievements.h"
 
 
 using variantMap = std::map<firebase::Variant, firebase::Variant>;
@@ -49,15 +50,13 @@ int main() {
 	Authentication auth(fbManager, dataManager);
 	Account acc(dataManager);
 	//auth.createAndRegisterAccount(&acc, "jkim@gmail.com", "password");
-	auth.createAndRegisterAccount(&acc, "asdasda@gmail.com", "oasswir");
+	auth.signInUser(&acc, "user4@gmail.com", "oasswir");
 	auth.updateUserProfile(&acc, "https://firebasestorage.googleapis.com/v0/b/wecycle-316c1.appspot.com/o/Gial_Ackbar_Resistance.jpg?alt=media&token=1059357a-f84f-4185-a798-7f6c7b730778"
 	,"Jkim");
 	
-	//PlayerAchievements pA(dataManager, "FXbSB1wX8Nc7HzeS8IQV89l2Vtt2");
-	//pA.addAchievement(&acc, "ID");
-	
-	delete fbManager;
-	delete dataManager;
+	PlayerAchievements pA(dataManager, "XiLfoTEMOrO8j35Lw41Asf7eRww1");
+	pA.addAchievement(&acc, "ID");
+
 
 	system("pause");
 
