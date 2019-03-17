@@ -8,13 +8,19 @@ Authentication::Authentication(FirebaseManager *fbManager, DataManager *dbManage
 
 Authentication::~Authentication() {}
 
+void printWait1() {
+	std::this_thread::sleep_for(std::chrono::seconds(2));
+	printf("Done!\n");
+}
+
 void Authentication::createAndRegisterAccount(Account *acc, std::string emailO, std::string passwordO) {
 
 	const char *email = strdup(emailO.c_str());
 	const char *password = strdup(passwordO.c_str());
 
 	firebase::Future<firebase::auth::User*> result = auth->CreateUserWithEmailAndPassword(email, password);
-
+	std::future<void> future = std::async(std::launch::async, printWait1);
+	future.wait();
 	result.OnCompletion([](const firebase::Future<firebase::auth::User*>& result, void* user_data) {
 		std::cout << "reuslt completed" << std::endl;
 		if (result.error() == firebase::auth::kAuthErrorNone) {
@@ -40,7 +46,8 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 
 	firebase::Future<firebase::auth::User*> result =
 		auth->SignInWithEmailAndPassword(email, password);
-
+	std::future<void> future = std::async(std::launch::async, printWait1);
+	future.wait();
 	//while (result.status() != firebase::kFutureStatusComplete) {}
 
 

@@ -4,6 +4,7 @@
 #include <firebase/database.h>
 #include "PushableObject.h"
 #include "FirebaseManager.h"
+#include <future>
 
 //TODO: ADD AUTHENTICATION TO FIREBASE
 

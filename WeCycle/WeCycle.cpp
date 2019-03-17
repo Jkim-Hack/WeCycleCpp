@@ -52,12 +52,13 @@ int main() {
 	//auth.createAndRegisterAccount(&acc, "asdasda@gmail.com", "oasswir");
 	auth.updateUserProfile(&acc, "https://firebasestorage.googleapis.com/v0/b/wecycle-316c1.appspot.com/o/Gial_Ackbar_Resistance.jpg?alt=media&token=1059357a-f84f-4185-a798-7f6c7b730778"
 	,"Jkim");
-	
+	//firebase::Variant v;
+	//dataManager->retrieveData("Account Info", "hVjfDAEucXgzMj2pgDBHfJk6hpr2", v);
 	PlayerAchievements pA(dataManager, "hVjfDAEucXgzMj2pgDBHfJk6hpr2");
 	pA.addAchievement(&acc, "ID");
 	
-	delete fbManager;
-	delete dataManager;
+	//delete fbManager;
+	//delete dataManager;
 
 	system("pause");
 

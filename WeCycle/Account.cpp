@@ -170,7 +170,7 @@ void Account::updateCheckAccount(bool res) {
 }
 void Account::createNewAccount(std::string uID) {
 	this->uid = uID;
-	dbm->pushData(this, "Account Info", uID);
+	this->dbm->pushData(this, "Account Info", uID);
 }
 void Account::updateUID(std::string uID) {
 	this->uid = uID;
@@ -256,12 +256,16 @@ void Account::updateXP(int increment) {
 	}
 
 }
-void Account::updateCoins(int incremenet) {
+void Account::updateCoins(int increment) {
 	firebase::Variant accInfo;
 	dbm->retrieveData("Account Info", this->uid, accInfo);
 	if (accInfo.is_vector()) {
-		int currCoinCount = accInfo.vector()[2].int64_value();
-		currCoinCount += incremenet;
+		VariantMap userData = accInfo.vector()[2].map();
+		int currCoinCount;
+		for (auto i = userData.begin(); i != userData.end(); i++) {
+			currCoinCount = i->second.int64_value();
+		}
+		currCoinCount += increment;
 		this->coins = currCoinCount;
 
 		VariantMap coinMap;
