@@ -1,5 +1,5 @@
 #include "PlayerAchievements.h"
-#ifdef _WIN32
+
 PlayerAchievements::PlayerAchievements(DataManager *dbm, std::vector<std::map<firebase::Variant, firebase::Variant>> achievementsList, std::string uid)
 {
 	this->dbm = dbm;
@@ -45,5 +45,4 @@ void PlayerAchievements::addAchievement(Account *acc, std::string achievementID)
 
 	dbm->pushData(this, "User Achievements");
 }
-
-#endif //_WIN32
+//TODO IMPLEMENT AUTOMATIC CHECKING USING VALUE LISTENERS

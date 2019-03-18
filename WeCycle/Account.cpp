@@ -294,9 +294,25 @@ void Account::updateDisplayName(std::string displayName) {
 	dbm->updateData(displayNameMap);
 }
 
-void Account::updateScans(int increment) { //TODO FINISH
-	this->numberOfScans += increment;
-}
+void Account::updateScans(int increment) {
+	firebase::Variant accInfo;
+	dbm->retrieveData("Account Info", this->uid, accInfo);
+	if (accInfo.is_vector()) {
+		VariantMap userData = accInfo.vector()[5].map();
+		int currScanCount;
+		for (auto i = userData.begin(); i != userData.end(); i++) {
+			currScanCount = i->second.int64_value();
+		}
+		currScanCount += increment;
+		this->coins = currScanCount;
+
+		VariantMap scanMap;
+		std::string path = "/Account Info/" + this->uid + "/5/Number of Scans";
+		scanMap.insert(std::pair<firebase::Variant, firebase::Variant>(path, this->numberOfScans));
+		dataList.at(5) = scanMap;
+		dbm->updateData(scanMap);
+	}
+} //TODO IMPLEMENT THIS
 
 bool Account::checkXPforRank() {
 	firebase::Variant rankList;

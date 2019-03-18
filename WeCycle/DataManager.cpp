@@ -114,19 +114,12 @@ void DataManager::updateData(firebase::Variant objectToPass) { //Object is of ty
 	}, nullptr);
 }
 
-void printWait() {
-	std::this_thread::sleep_for(std::chrono::seconds(3));
-	printf("Done!\n");
-}
-
-//Possibly obselete
 void DataManager::retrieveData(std::string parent, firebase::Variant &object) {
 
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).GetValue();
-	std::future<void> future = std::async(std::launch::async, printWait);
-	future.wait();
-	firebase::Variant *ob = &object;
-	//while (result.status() != firebase::kFutureStatusComplete) {} //Loop to wait until retrieval is complete //TODO add a runtime exception
+	std::future<firebase::Variant> future = std::async(std::launch::deferred, retrieveData_thread, result, object);
+	object = future.get();
+	/*
 	result.OnCompletion([](const firebase::Future<firebase::database::DataSnapshot>& result, void* user_data) {
 		firebase::Variant ob = static_cast<firebase::Variant*>(user_data);
 		if (result.error() == firebase::database::kErrorNone) {
@@ -157,9 +150,10 @@ void DataManager::retrieveData(std::string parent, firebase::Variant &object) {
 			std::cout << "Error Retrieving Data" << std::endl;
 		}
 	}, ob);
+	*/
 }
 
-firebase::Variant retrieveData_thread(firebase::Future<firebase::database::DataSnapshot> result, std::string parent, std::string key, firebase::Variant object) {
+firebase::Variant retrieveData_thread(firebase::Future<firebase::database::DataSnapshot> result, firebase::Variant object) {
 	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	firebase::Variant variant; 
 
@@ -203,7 +197,7 @@ firebase::Variant retrieveData_thread(firebase::Future<firebase::database::DataS
 void DataManager::retrieveData(std::string parent, std::string key, firebase::Variant &object) {
 
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).Child(key).GetValue();
-	std::future<firebase::Variant> future = std::async(std::launch::deferred, retrieveData_thread, result, parent, key, object);
+	std::future<firebase::Variant> future = std::async(std::launch::deferred, retrieveData_thread, result, object);
 	object = future.get();
 }
 
