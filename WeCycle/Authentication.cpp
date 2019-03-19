@@ -58,7 +58,8 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 			firebase::auth::User* user = *result.result();
 			std::string uID = user->uid();
 			acc->updateUID(uID);
-			acc->updateDataList();
+			acc->registerAccountListener();
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
 			acc->updateCheckAccount(true);
 			printf("Sign in succeeded for email %s\n", user->email().c_str());
 		}

@@ -48,15 +48,17 @@ int main() {
 	
 	Authentication auth(fbManager, dataManager);
 	Account acc(dataManager);
-	auth.signInUser(&acc, "jkim@gmail.com", "password");
+	auth.signInUser(&acc, "user@gmail.com", "password");
 	//auth.createAndRegisterAccount(&acc, "asdasda@gmail.com", "oasswir");
-	auth.updateUserProfile(&acc, "https://firebasestorage.googleapis.com/v0/b/wecycle-316c1.appspot.com/o/Gial_Ackbar_Resistance.jpg?alt=media&token=1059357a-f84f-4185-a798-7f6c7b730778"
-	,"Jkim");
+	//auth.updateUserProfile(&acc, "https://firebasestorage.googleapis.com/v0/b/wecycle-316c1.appspot.com/o/Gial_Ackbar_Resistance.jpg?alt=media&token=1059357a-f84f-4185-a798-7f6c7b730778"
+	//,"Jkim");
 	//firebase::Variant v;
 	//dataManager->retrieveData("Account Info", "hVjfDAEucXgzMj2pgDBHfJk6hpr2", v);
-	PlayerAchievements pA(dataManager, "hVjfDAEucXgzMj2pgDBHfJk6hpr2");
-	pA.addAchievement(&acc, "ID");
+	//PlayerAchievements pA(dataManager, "hVjfDAEucXgzMj2pgDBHfJk6hpr2");
+	//pA.addAchievement(&acc, "ID");
 	
+	acc.updateScans(60);
+
 	//delete fbManager;
 	//delete dataManager;
 

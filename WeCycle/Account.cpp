@@ -162,7 +162,9 @@ const char* Account::displaynameA() const {
 int Account::numberOfScansA() const {
 	return this->numberOfScans;
 }
-
+std::string Account::uidA() const {
+	return this->uid;
+}
 
 
 void Account::updateCheckAccount(bool res) {
@@ -171,6 +173,10 @@ void Account::updateCheckAccount(bool res) {
 void Account::createNewAccount(std::string uID) {
 	this->uid = uID;
 	this->dbm->pushData(this, "Account Info", uID);
+	this->dbm->retrieveData_listener(this);
+}
+void Account::registerAccountListener() {
+	this->dbm->retrieveData_listener(this);
 }
 void Account::updateUID(std::string uID) {
 	this->uid = uID;
@@ -186,6 +192,35 @@ void Account::updateDataList() { //UID MUST BE ALREADY INTIALIZED IN ORDER FOR T
 					this->dataList.at(count) = x.map();
 				}
 			}	
+			count++;
+		}
+	}
+	this->rank = this->dataList[0].find("Rank")->second.mutable_string();
+	this->experience = this->dataList[1].find("Experience")->second.int64_value();
+	this->coins = this->dataList[2].find("Coins")->second.int64_value();
+	this->profilePicLink = this->dataList[3].find("PFP Link")->second.mutable_string();
+	this->display_name = this->dataList[4].find("Display Name")->second.mutable_string();
+	this->numberOfScans = this->dataList[5].find("Number of Scans")->second.int64_value();
+
+	if (this->uid == "") {
+		return;
+	}
+
+	std::map<firebase::Variant, firebase::Variant> accountMap;
+	accountMap.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, dataList));
+
+	this->initialize(accountMap);
+}//UID MUST BE ALREADY INTIALIZED IN ORDER FOR THIS TO WORK
+void Account::updateDataList(firebase::Variant object) { 
+	firebase::Variant dataList = object;
+	if (dataList.is_vector()) {
+		int count = 0;
+		for (auto &x : dataList.vector()) {
+			if (x.is_map()) {
+				for (auto &y : x.map()) {
+					this->dataList.at(count) = x.map();
+				}
+			}
 			count++;
 		}
 	}

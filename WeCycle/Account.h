@@ -44,11 +44,14 @@ public:
 	const char* profilePicLinkA() const;
 	const char* displaynameA() const;
 	int numberOfScansA() const;
+	std::string uidA() const;
 
 	void updateCheckAccount(bool res);
 	void createNewAccount(std::string uID);
+	void registerAccountListener();
 	void updateUID(std::string uID);
 	void updateDataList();
+	void updateDataList(firebase::Variant object);
 	void updateRank_override(const char* rank);
 	void updateRank();
 	void updateXP(int increment);

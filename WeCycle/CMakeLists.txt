@@ -12,6 +12,7 @@ include_directories(${PROJECT_SOURCE_DIR}/WeCycle ${PROJECT_SOURCE_DIR}/firebase
 add_executable (WeCycle "WeCycle.cpp" "WeCycle.h" "Account.cpp" "Account.h" "DataManager.cpp" "DataManager.h" "PushableObject.cpp" 
 				"PushableObject.h" "FirebaseManager.h" "FirebaseManager.cpp" "StorageManager.h" "StorageManager.cpp" "StorageListener.h" 
 				"StorageListener.cpp" "Authentication.cpp" "Authentication.h" "Crypto.h" "Crypto.cpp" "PlayerAchievements.h" "PlayerAchievements.cpp"
+				"AccountValueListener.h" "AccountValueListener.cpp"
 				"c-headers-wrappers/DataManagerWrapper.hpp"
 				"c-headers-wrappers/DataManagerWrapper.cpp" 
 				"c-headers-wrappers/AccountWrapper.hpp"

@@ -4,6 +4,7 @@
 #include <firebase/database.h>
 #include "PushableObject.h"
 #include "FirebaseManager.h"
+#include "AccountValueListener.h"
 #include <future>
 
 //TODO: ADD AUTHENTICATION TO FIREBASE
@@ -28,6 +29,7 @@ public:
 	void updateData(firebase::Variant objectToPass, std::string parent);
 	void updateData(firebase::Variant objectToPass);
 
+	void retrieveData_listener(Account *acc);
 
 	void retrieveData(std::string parent, firebase::Variant &object);
 	void retrieveData(std::string parent, std::string key, firebase::Variant &object);
