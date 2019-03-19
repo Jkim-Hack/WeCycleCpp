@@ -57,7 +57,7 @@ int main() {
 	//PlayerAchievements pA(dataManager, "hVjfDAEucXgzMj2pgDBHfJk6hpr2");
 	//pA.addAchievement(&acc, "ID");
 	
-	acc.updateScans(60);
+	acc.updateXP(100);
 
 	//delete fbManager;
 	//delete dataManager;

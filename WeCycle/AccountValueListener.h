@@ -1,8 +1,9 @@
+#pragma once
 #include <iostream>
 #include "Account.h"
-#include "DataManager.cpp"
 #include <firebase/database/listener.h>
 #include <firebase/database/data_snapshot.h>
+
 
 class AccountValueListener : public firebase::database::ValueListener {
 private:

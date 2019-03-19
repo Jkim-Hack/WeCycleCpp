@@ -114,12 +114,13 @@ void DataManager::updateData(firebase::Variant objectToPass) { //Object is of ty
 	}, nullptr);
 }
 
-
-void DataManager::retrieveData_listener(Account *acc) {
+/*
+void DataManager::retrieveData_account(std::string parent, Account *acc) {
 	AccountValueListener *listener = new AccountValueListener(acc);
-	dbref.Child(acc->uidA()).AddValueListener(listener);
+	dbref.Child("Account Info").Child(parent).AddValueListener(listener);
+	//dbref.GetReference().AddValueListener(listener);
 }
-
+*/
 firebase::Variant retrieveData_thread(firebase::Future<firebase::database::DataSnapshot> result, firebase::Variant object) {
 	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	firebase::Variant variant;

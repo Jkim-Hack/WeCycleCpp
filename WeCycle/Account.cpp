@@ -173,10 +173,12 @@ void Account::updateCheckAccount(bool res) {
 void Account::createNewAccount(std::string uID) {
 	this->uid = uID;
 	this->dbm->pushData(this, "Account Info", uID);
-	this->dbm->retrieveData_listener(this);
+	registerAccountListener();
 }
 void Account::registerAccountListener() {
-	this->dbm->retrieveData_listener(this);
+	AccountValueListener *listener = new AccountValueListener(this);
+	this->dbm->getDBref().Child("Account Info").Child(this->uid).AddValueListener(listener);
+	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 }
 void Account::updateUID(std::string uID) {
 	this->uid = uID;
@@ -292,23 +294,13 @@ void Account::updateXP(int increment) {
 
 }
 void Account::updateCoins(int increment) {
-	firebase::Variant accInfo;
-	dbm->retrieveData("Account Info", this->uid, accInfo);
-	if (accInfo.is_vector()) {
-		VariantMap userData = accInfo.vector()[2].map();
-		int currCoinCount;
-		for (auto i = userData.begin(); i != userData.end(); i++) {
-			currCoinCount = i->second.int64_value();
-		}
-		currCoinCount += increment;
-		this->coins = currCoinCount;
-
-		VariantMap coinMap;
-		std::string path = "/Account Info/" + this->uid + "/2/Coins";
-		coinMap.insert(std::pair<firebase::Variant, firebase::Variant>(path, this->coins));
-		dataList.at(2) = coinMap;
-		dbm->updateData(coinMap);
-	}
+	this->coins += increment;
+	VariantMap coinMap;
+	std::string path = "/Account Info/" + this->uid + "/2/Coins";
+	coinMap.insert(std::pair<firebase::Variant, firebase::Variant>(path, this->coins));
+	dataList.at(2) = coinMap;
+	firebase::Variant variant(coinMap);
+	dbm->updateData(variant);
 }
 void Account::updatePFP(std::string link) {
 	this->profilePicLink = link;
@@ -330,24 +322,14 @@ void Account::updateDisplayName(std::string displayName) {
 }
 
 void Account::updateScans(int increment) {
-	firebase::Variant accInfo;
-	dbm->retrieveData("Account Info", this->uid, accInfo);
-	if (accInfo.is_vector()) {
-		VariantMap userData = accInfo.vector()[5].map();
-		int currScanCount;
-		for (auto i = userData.begin(); i != userData.end(); i++) {
-			currScanCount = i->second.int64_value();
-		}
-		currScanCount += increment;
-		this->coins = currScanCount;
+	this->numberOfScans = increment;
+	VariantMap scanMap;
+	std::string path = "/Account Info/" + this->uid + "/5/Number of Scans";
+	scanMap.insert(std::pair<firebase::Variant, firebase::Variant>(path, this->numberOfScans));
+	dataList.at(5) = scanMap;
+	dbm->updateData(scanMap);
 
-		VariantMap scanMap;
-		std::string path = "/Account Info/" + this->uid + "/5/Number of Scans";
-		scanMap.insert(std::pair<firebase::Variant, firebase::Variant>(path, this->numberOfScans));
-		dataList.at(5) = scanMap;
-		dbm->updateData(scanMap);
-	}
-} //TODO IMPLEMENT THIS
+} 
 
 bool Account::checkXPforRank() {
 	firebase::Variant rankList;

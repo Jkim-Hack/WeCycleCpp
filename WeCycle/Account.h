@@ -2,6 +2,7 @@
 #include <iostream>
 #include "DataManager.h"
 #include "PushableObject.h"
+#include "AccountValueListener.h"
 #include <firebase/auth.h>
 #include <firebase/future.h>
 
@@ -46,9 +47,10 @@ public:
 	int numberOfScansA() const;
 	std::string uidA() const;
 
+	void registerAccountListener();
+
 	void updateCheckAccount(bool res);
 	void createNewAccount(std::string uID);
-	void registerAccountListener();
 	void updateUID(std::string uID);
 	void updateDataList();
 	void updateDataList(firebase::Variant object);
