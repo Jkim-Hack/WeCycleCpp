@@ -169,6 +169,9 @@ std::string Account::uidA() const {
 void Account::registerFriendsListeners() {
 	FriendsRequestValueListener *requestlistener = new  FriendsRequestValueListener(this);
 	FriendsValueListener *friendslistener = new FriendsValueListener(this);
+	this->dbm->getDBref().Child("Friends Pending").Child(this->uid).AddValueListener(requestlistener);
+	this->dbm->getDBref().Child("Friends").Child(this->uid).AddValueListener(friendslistener);
+
 	//TODO create database references
 }
 void Account::updateFriendsList(firebase::Variant object) {
