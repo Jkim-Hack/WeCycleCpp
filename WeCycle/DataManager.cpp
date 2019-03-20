@@ -163,10 +163,22 @@ firebase::Variant retrieveData_thread(firebase::Future<firebase::database::DataS
 }
 
 void DataManager::retrieveData(std::string parent, firebase::Variant &object) {
-
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).GetValue();
-	std::future<firebase::Variant> future = std::async(std::launch::deferred, retrieveData_thread, result, object);
-	object = future.get();
+	result.OnCompletion([](const firebase::Future<firebase::database::DataSnapshot>& result, void* user_data) {
+		firebase::Variant *ob = static_cast<firebase::Variant*>(user_data);
+		firebase::Variant childList;
+		if (result.error() == firebase::database::kErrorNone) {
+			std::cout << "Retrival Complete" << std::endl;
+			childList = result.result()->value();
+			std::cout << childList.is_vector() << std::endl;
+			if (childList.is_vector()) {
+				ob = &childList;
+			}
+		}
+		else {
+			std::cout << "Error Retrieving Data" << std::endl;
+		}
+	}, &object);
 	/*
 	result.OnCompletion([](const firebase::Future<firebase::database::DataSnapshot>& result, void* user_data) {
 		firebase::Variant ob = static_cast<firebase::Variant*>(user_data);
@@ -205,8 +217,21 @@ void DataManager::retrieveData(std::string parent, firebase::Variant &object) {
 void DataManager::retrieveData(std::string parent, std::string key, firebase::Variant &object) {
 
 	firebase::Future<firebase::database::DataSnapshot> result = dbref.Child(parent).Child(key).GetValue();
-	std::future<firebase::Variant> future = std::async(std::launch::deferred, retrieveData_thread, result, object);
-	object = future.get();
+	result.OnCompletion([](const firebase::Future<firebase::database::DataSnapshot>& result, void* user_data) {
+		firebase::Variant *ob = static_cast<firebase::Variant*>(user_data);
+		firebase::Variant childList;
+		if (result.error() == firebase::database::kErrorNone) {
+			std::cout << "Retrival Complete" << std::endl;
+			childList = result.result()->value();
+			std::cout << childList.is_vector() << std::endl;
+			if (childList.is_vector()) {
+				ob = &childList;
+			}
+		}
+		else {
+			std::cout << "Error Retrieving Data" << std::endl;
+		}
+	}, &object);
 }
 
 firebase::database::DatabaseReference DataManager::getDBref() {

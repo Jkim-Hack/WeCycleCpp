@@ -166,6 +166,45 @@ std::string Account::uidA() const {
 	return this->uid;
 }
 
+void Account::registerFriendsListeners() {
+	FriendsRequestValueListener *requestlistener = new  FriendsRequestValueListener(this);
+	FriendsValueListener *friendslistener = new FriendsValueListener(this);
+	//TODO create database references
+}
+void Account::updateFriendsList(firebase::Variant object) {
+	if (object.is_vector()) {
+		this->friendsListRequests = object.vector();
+	}
+}
+void Account::updateRequestFriendsList(firebase::Variant object) {
+	if (object.is_vector()) {
+		this->friendsListRequests = object.vector();
+	}
+}
+void Account::addFriend(std::string uid) {
+	this->friendsList.push_back(uid);
+	PushableObject friendObject;
+	VariantMap friends;
+	friends.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, this->friendsList));
+	friendObject.initialize(friends);
+	this->dbm->pushData(&friendObject, "User Friends");
+}
+
+void Account::addRequestFriend(std::string id) {
+	firebase::Variant friendsListP;
+	this->dbm->retrieveData("User Freinds Pending", id, friendsListP);
+	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	if (friendsListP.is_vector()) {
+		this->friendsListPending = friendsListP.vector();
+	}
+	this->friendsListPending.push_back(id);
+	PushableObject friendObject;
+	VariantMap friends;
+	friends.insert(std::pair<firebase::Variant, firebase::Variant>(id, this->friendsListPending));
+	friendObject.initialize(friends);
+	this->dbm->pushData(&friendObject, "User Friends Pending");
+}
+
 
 void Account::updateCheckAccount(bool res) {
 	this->checkAccount = res;
@@ -352,3 +391,37 @@ bool Account::checkXPforRank() {
 	}
 	return result;
 }
+
+
+class FriendsRequestValueListener : public firebase::database::ValueListener {
+	Account *acc;
+public:
+	FriendsRequestValueListener(Account *account) {
+		acc = account;
+	}
+	void OnValueChanged(const firebase::database::DataSnapshot &snapshot) override {
+		firebase::Variant obj = snapshot.value();
+		acc->updateRequestFriendsList(obj);
+	}
+	void OnCancelled(const firebase::database::Error& error_code,
+					 const char* error_message) override {
+		printf("ERROR: LeadersValueListener canceled: %d: %s", error_code,
+			   error_message);
+	}
+};
+class FriendsValueListener : public firebase::database::ValueListener {
+	Account *acc;
+public:
+	FriendsValueListener(Account *account) {
+		acc = account;
+	}
+	void OnValueChanged(const firebase::database::DataSnapshot &snapshot) override {
+		firebase::Variant obj = snapshot.value();
+		acc->updateFriendsList(obj);
+	}
+	void OnCancelled(const firebase::database::Error& error_code,
+					 const char* error_message) override {
+		printf("ERROR: LeadersValueListener canceled: %d: %s", error_code,
+			   error_message);
+	}
+};

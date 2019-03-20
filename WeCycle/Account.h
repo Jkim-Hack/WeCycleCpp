@@ -29,6 +29,11 @@ private:
 	bool checkXPforRank();
 	bool checkAccount;
 
+	std::vector<firebase::Variant> friendsList;
+	std::vector<firebase::Variant> friendsListPending;
+	std::vector<firebase::Variant> friendsListRequests;
+
+
 public:
 	Account(DataManager *dbm);
 	Account(DataManager *dbm, std::string uid);
@@ -48,6 +53,11 @@ public:
 	std::string uidA() const;
 
 	void registerAccountListener();
+	void registerFriendsListeners();
+	void updateFriendsList(firebase::Variant object);
+	void updateRequestFriendsList(firebase::Variant object);
+	void addFriend(std::string uid);
+	void addRequestFriend(std::string id);
 
 	void updateCheckAccount(bool res);
 	void createNewAccount(std::string uID);

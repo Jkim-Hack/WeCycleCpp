@@ -68,7 +68,7 @@ void Authentication::signInUser(Account *acc, std::string emailO, std::string pa
 			printf("Sign in failed with error '%s'\n", result.error_message());
 		}
 	}, acc);
-
+	
 
 }
 
