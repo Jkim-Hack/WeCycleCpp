@@ -30,6 +30,10 @@ void updatePFP(const void *accountObj, const char* link) {
 	Account *account = (Account *)accountObj;
 	account->updatePFP(link);
 }
+void updateDisplayName(const void *accountObj, const char* name) {
+	Account *account = (Account *)accountObj;
+	account->updateDisplayName(name);
+}
 void updateScans(const void *accountObj, int increment) {
 	Account *account = (Account *)accountObj;
 	account->updateScans(increment);
@@ -44,10 +48,6 @@ void addRequestFriend(const void *accountObj, const char* id)
 	Account *account = (Account *)accountObj;
 	account->addRequestFriend(id);
 }
-
-
-
-
 const bool checkAccount(const void *accountObj) {
 	Account *account = (Account *)accountObj;
 	return account->checkAccountA();
@@ -71,4 +71,8 @@ const char* profilePicLink(const void *accountObj) {
 const int numberOfScans(const void *accountObj) {
 	Account *account = (Account *)accountObj;
 	return account->numberOfScansA();
+}
+const char* displayName(const void *accountObj) {
+	Account *account = (Account *)accountObj;
+	return account->displaynameA();
 }

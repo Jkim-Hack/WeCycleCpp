@@ -40,7 +40,6 @@ public:
 	Account(DataManager *dbm, std::string uid);
 	Account(DataManager *dbm, std::string rank, unsigned int experience, unsigned int coins, std::string profilePicLink, std::string uid);
 	Account(DataManager *dbm, std::vector<firebase::Variant> dataList, std::string uid);
-	//TODO add intialize override function and addData function
 
 	~Account();
 
