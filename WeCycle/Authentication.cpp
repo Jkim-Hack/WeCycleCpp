@@ -131,10 +131,10 @@ const char *Authentication::getUID(const char *email) { //THIS DOESNT WORK
 	firebase::Variant string;
 	EmailsValueListener *listener = new EmailsValueListener(&string);
 	std::string emailO = findAndRemovePeriod1(email);
-	firebase::database::Query query = this->dbManage->getDBref().Child("Emails").OrderByValue().LimitToLast(1);
+	firebase::database::Query query = this->dbManage->getDBref().Child("Emails").Child(emailO);
 	query.AddValueListener(listener);
-	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	const char *result = string.mutable_string().c_str();
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	const char *result = strdup(string.mutable_string().c_str());
 	return result;
 }
 

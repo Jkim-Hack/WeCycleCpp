@@ -56,7 +56,8 @@ int main() {
 	//dataManager->retrieveData("Account Info", "hVjfDAEucXgzMj2pgDBHfJk6hpr2", v);
 	//PlayerAchievements pA(dataManager, "hVjfDAEucXgzMj2pgDBHfJk6hpr2");
 	//pA.addAchievement(&acc, "ID");
-	std::string s = auth.getUID("jkim@gmail.com");
+	const char* s = auth.getUID("jkim@gmail.com");
+	printf(s);
 	//acc.addRequestFriend("hVjfDAEucXgzMj2pgDBHfJk6hpr2");
 	//acc.addFriend("BpaLWSoXUYR1Os0Yq9tsE4TqChj2");
 	//delete fbManager;
