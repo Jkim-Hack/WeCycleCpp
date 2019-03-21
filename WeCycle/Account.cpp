@@ -169,14 +169,12 @@ std::string Account::uidA() const {
 void Account::registerFriendsListeners() {
 	FriendsRequestValueListener *requestlistener = new  FriendsRequestValueListener(this);
 	FriendsValueListener *friendslistener = new FriendsValueListener(this);
-	this->dbm->getDBref().Child("Friends Pending").Child(this->uid).AddValueListener(requestlistener);
+	this->dbm->getDBref().Child("User Friends Pending").Child(this->uid).AddValueListener(requestlistener);
 	this->dbm->getDBref().Child("Friends").Child(this->uid).AddValueListener(friendslistener);
-
-	//TODO create database references
 }
 void Account::updateFriendsList(firebase::Variant object) {
 	if (object.is_vector()) {
-		this->friendsListRequests = object.vector();
+		this->friendsList = object.vector();
 	}
 }
 void Account::updateRequestFriendsList(firebase::Variant object) {
@@ -184,30 +182,73 @@ void Account::updateRequestFriendsList(firebase::Variant object) {
 		this->friendsListRequests = object.vector();
 	}
 }
-void Account::addFriend(std::string uid) {
+
+typedef unsigned int uint;
+int findIndex(std::string value, std::vector<firebase::Variant> list) { //LIST VARIANT MUST BE A STRING
+	int res = 0;
+	for (uint i = 0; i < list.size(); i++) {
+		if (list.at(i).mutable_string() == value)
+			res = i;
+	}
+	return res;
+}
+void Account::addFriend(std::string uid) { //UID MUST BE IN PENDING LIST
+	//Adds friends to the friends list via uid
 	this->friendsList.push_back(uid);
 	PushableObject friendObject;
 	VariantMap friends;
 	friends.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, this->friendsList));
 	friendObject.initialize(friends);
 	this->dbm->pushData(&friendObject, "User Friends");
-}
 
+	//Removes friend from the request list
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	int index = findIndex(uid, this->friendsListRequests);
+	if (this->friendsListRequests.size() > 0) {
+		this->friendsListRequests.erase(this->friendsListRequests.begin() + index);
+	}
+	PushableObject friendListRObject;
+	VariantMap friendListR;
+	friendListR.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, this->friendsListRequests));
+	friendListRObject.initialize(friendListR);
+	this->dbm->pushData(&friendListRObject,"User Friends Pending");
+
+	//Finally adding this account to the friend's friend list
+	firebase::Variant friendsListP;
+	FriendsPendingValueListener *listener = new FriendsPendingValueListener(&friendsListP);
+	this->dbm->getDBref().Child("User Friends").Child(uid).AddValueListener(listener);
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	if (friendsListP.is_vector()) {
+		friendsListP.vector().push_back(this->uid);
+	}
+	else {
+		std::vector<firebase::Variant> otherFriendsList;
+		otherFriendsList.push_back(this->uid);
+		friendsListP.set_vector(otherFriendsList);
+	}
+	PushableObject otherFriendObject;
+	VariantMap otherFriends;
+	otherFriends.insert(std::pair<firebase::Variant, firebase::Variant>(uid, friendsListP.vector()));
+	otherFriendObject.initialize(otherFriends);
+	this->dbm->getDBref().Child("User Friends").Child(uid).RemoveValueListener(listener);
+	this->dbm->pushData(&otherFriendObject, "User Friends");
+}
 void Account::addRequestFriend(std::string id) {
 	firebase::Variant friendsListP;
-	this->dbm->retrieveData("User Freinds Pending", id, friendsListP);
-	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	FriendsPendingValueListener *listener = new FriendsPendingValueListener(&friendsListP);
+	this->dbm->getDBref().Child("User Friends Pending").Child(id).AddValueListener(listener);
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	if (friendsListP.is_vector()) {
 		this->friendsListPending = friendsListP.vector();
 	}
-	this->friendsListPending.push_back(id);
+	this->friendsListPending.push_back(this->uid);
 	PushableObject friendObject;
 	VariantMap friends;
 	friends.insert(std::pair<firebase::Variant, firebase::Variant>(id, this->friendsListPending));
 	friendObject.initialize(friends);
+	this->dbm->getDBref().Child("User Friends Pending").Child(id).RemoveValueListener(listener);
 	this->dbm->pushData(&friendObject, "User Friends Pending");
 }
-
 
 void Account::updateCheckAccount(bool res) {
 	this->checkAccount = res;
@@ -215,12 +256,16 @@ void Account::updateCheckAccount(bool res) {
 void Account::createNewAccount(std::string uID) {
 	this->uid = uID;
 	this->dbm->pushData(this, "Account Info", uID);
+	firebase::Variant uidVariant;
+	uidVariant.set_mutable_string(this->uid);
+	this->dbm->getDBref().Child("Emails").Child(this->email).SetValue(uidVariant);
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	registerAccountListener();
 }
 void Account::registerAccountListener() {
 	AccountValueListener *listener = new AccountValueListener(this);
 	this->dbm->getDBref().Child("Account Info").Child(this->uid).AddValueListener(listener);
-	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 }
 void Account::updateUID(std::string uID) {
 	this->uid = uID;
@@ -284,7 +329,6 @@ void Account::updateDataList(firebase::Variant object) {
 
 	this->initialize(accountMap);
 }
-
 void Account::updateRank_override(const char* rank) {
 	this->rank = rank;
 	VariantMap rankMap;
@@ -293,7 +337,6 @@ void Account::updateRank_override(const char* rank) {
 	this->dataList.at(0) = rankMap; //0 is rank position
 	dbm->updateData(rankMap);
 }
-
 void Account::updateRank() {
 	firebase::Variant rankList;
 	dbm->retrieveData("Ranks", rankList);
@@ -352,7 +395,6 @@ void Account::updatePFP(std::string link) {
 	this->dataList.at(3) = profilePicMap;
 	dbm->updateData(profilePicMap);
 }
-
 void Account::updateDisplayName(std::string displayName) {
 
 	this->display_name = displayName;
@@ -362,7 +404,6 @@ void Account::updateDisplayName(std::string displayName) {
 	dataList.at(4) = displayNameMap;
 	dbm->updateData(displayNameMap);
 }
-
 void Account::updateScans(int increment) {
 	this->numberOfScans = increment;
 	VariantMap scanMap;
@@ -372,7 +413,16 @@ void Account::updateScans(int increment) {
 	dbm->updateData(scanMap);
 
 } 
-
+std::string findAndRemovePeriod(std::string inp) {
+	std::string input = inp;
+	std::size_t index = input.find(".");
+	input.erase(input.begin() + index);
+	return input;
+}
+void Account::updateEmail(std::string email) {
+	std::string emailO = email;
+	this->email = findAndRemovePeriod(emailO);
+}
 bool Account::checkXPforRank() {
 	firebase::Variant rankList;
 	dbm->retrieveData("Ranks", rankList);
@@ -395,36 +445,3 @@ bool Account::checkXPforRank() {
 	return result;
 }
 
-
-class FriendsRequestValueListener : public firebase::database::ValueListener {
-	Account *acc;
-public:
-	FriendsRequestValueListener(Account *account) {
-		acc = account;
-	}
-	void OnValueChanged(const firebase::database::DataSnapshot &snapshot) override {
-		firebase::Variant obj = snapshot.value();
-		acc->updateRequestFriendsList(obj);
-	}
-	void OnCancelled(const firebase::database::Error& error_code,
-					 const char* error_message) override {
-		printf("ERROR: LeadersValueListener canceled: %d: %s", error_code,
-			   error_message);
-	}
-};
-class FriendsValueListener : public firebase::database::ValueListener {
-	Account *acc;
-public:
-	FriendsValueListener(Account *account) {
-		acc = account;
-	}
-	void OnValueChanged(const firebase::database::DataSnapshot &snapshot) override {
-		firebase::Variant obj = snapshot.value();
-		acc->updateFriendsList(obj);
-	}
-	void OnCancelled(const firebase::database::Error& error_code,
-					 const char* error_message) override {
-		printf("ERROR: LeadersValueListener canceled: %d: %s", error_code,
-			   error_message);
-	}
-};

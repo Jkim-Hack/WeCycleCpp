@@ -34,6 +34,20 @@ void updateScans(const void *accountObj, int increment) {
 	Account *account = (Account *)accountObj;
 	account->updateScans(increment);
 }
+void addFriend(const void *accountObj, const char* uid)
+{
+	Account *account = (Account *)accountObj;
+	account->addFriend(uid);
+}
+void addRequestFriend(const void *accountObj, const char* id)
+{
+	Account *account = (Account *)accountObj;
+	account->addRequestFriend(id);
+}
+
+
+
+
 const bool checkAccount(const void *accountObj) {
 	Account *account = (Account *)accountObj;
 	return account->checkAccountA();

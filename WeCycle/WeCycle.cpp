@@ -18,8 +18,8 @@
 
 int main() {
 
-	//const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
-	const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
+	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
+	//const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
 	FirebaseManager *fbManager = new FirebaseManager(filename);
 	DataManager *dataManager = new DataManager(fbManager);
 
@@ -48,7 +48,7 @@ int main() {
 	
 	Authentication auth(fbManager, dataManager);
 	Account acc(dataManager);
-	auth.signInUser(&acc, "user@gmail.com", "password");
+	auth.signInUser(&acc, "jkim@gmail.com", "password");
 	//auth.createAndRegisterAccount(&acc, "asdasda@gmail.com", "oasswir");
 	//auth.updateUserProfile(&acc, "https://firebasestorage.googleapis.com/v0/b/wecycle-316c1.appspot.com/o/Gial_Ackbar_Resistance.jpg?alt=media&token=1059357a-f84f-4185-a798-7f6c7b730778"
 	//,"Jkim");
@@ -56,9 +56,9 @@ int main() {
 	//dataManager->retrieveData("Account Info", "hVjfDAEucXgzMj2pgDBHfJk6hpr2", v);
 	//PlayerAchievements pA(dataManager, "hVjfDAEucXgzMj2pgDBHfJk6hpr2");
 	//pA.addAchievement(&acc, "ID");
-	
-	acc.updateXP(100);
-
+	std::string s = auth.getUID("jkim@gmail.com");
+	//acc.addRequestFriend("hVjfDAEucXgzMj2pgDBHfJk6hpr2");
+	//acc.addFriend("BpaLWSoXUYR1Os0Yq9tsE4TqChj2");
 	//delete fbManager;
 	//delete dataManager;
 
