@@ -3,8 +3,8 @@
 #include "StorageManager.h"
 
 
-const void *initializeStorage(const void *object) {
-	StorageManager *storeManager = new StorageManager((FirebaseManager *)object);
+const void *initializeStorage(const void *fbObject, const void *accountObj) {
+	StorageManager *storeManager = new StorageManager((FirebaseManager *)fbObject, (Account *)accountObj);
 	return (void *)storeManager;
 }
 /*

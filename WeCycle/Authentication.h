@@ -25,4 +25,26 @@ public:
 
 	void updateUserProfile(Account *acc, const char* pfplink, const char* displayname);
 	void updateUserPFPLink(Account *acc, const char* pfplink);
+
+	const char *getUID(const char* email);
+
+	class EmailsValueListener : public firebase::database::ValueListener {
+		firebase::Variant *object;
+	public:
+		EmailsValueListener(firebase::Variant *obj) {
+			object = obj;
+		}
+		void OnValueChanged(const firebase::database::DataSnapshot &snapshot) override {
+			firebase::Variant obj = snapshot.value();
+			if (obj.is_mutable_string()) {
+				object->set_mutable_string(obj.mutable_string());
+				printf("Done454545\n");
+			}
+		}
+		void OnCancelled(const firebase::database::Error& error_code,
+						 const char* error_message) override {
+			printf("ERROR: LeadersValueListener canceled: %d: %s", error_code,
+				   error_message);
+		}
+	};
 };
