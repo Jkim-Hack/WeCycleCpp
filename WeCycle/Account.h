@@ -52,7 +52,7 @@ public:
 	int numberOfScansA() const;
 	std::string uidA() const;
 	const char **requestListA() const;
-	const char **freindsListA() const;
+	const char **friendsListA() const;
 
 	//Dont need wrappers
 	void registerAccountListener();

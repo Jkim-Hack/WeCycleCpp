@@ -173,17 +173,19 @@ const char **Account::requestListA() const {
 			resultVector.push_back(strdup(val.mutable_string().c_str()));
 		} 
 	}
-	const char **result = &resultVector[0];
+	const char **result = new const char*[resultVector.size()];
+	std::copy(resultVector.begin(), resultVector.end(), result);
 	return result;
 }
-const char **Account::freindsListA() const {
+const char **Account::friendsListA() const {
 	std::vector<const char*> resultVector;
 	for (auto &val : friendsList) {
 		if (val.is_mutable_string()) {
 			resultVector.push_back(strdup(val.mutable_string().c_str()));
 		}
 	}
-	const char **result = &resultVector[0];
+	const char **result = new const char*[resultVector.size()];
+	std::copy(resultVector.begin(), resultVector.end(), result);
 	return result;
 }
 
@@ -192,7 +194,7 @@ void Account::registerFriendsListeners() {
 	FriendsRequestValueListener *requestlistener = new  FriendsRequestValueListener(this);
 	FriendsValueListener *friendslistener = new FriendsValueListener(this);
 	this->dbm->getDBref().Child("User Friends Pending").Child(this->uid).AddValueListener(requestlistener);
-	this->dbm->getDBref().Child("Friends").Child(this->uid).AddValueListener(friendslistener);
+	this->dbm->getDBref().Child("User Friends").Child(this->uid).AddValueListener(friendslistener);
 }
 void Account::updateFriendsList(firebase::Variant object) {
 	if (object.is_vector()) {

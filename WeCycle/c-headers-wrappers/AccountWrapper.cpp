@@ -76,13 +76,12 @@ const char* displayName(const void *accountObj) {
 	Account *account = (Account *)accountObj;
 	return account->displaynameA();
 }
-/*
+
 const char **requestList(const void *accountObj) {
 	Account *account = (Account *)accountObj;
 	return account->requestListA();
 }
 const char **friendsList(const void *accountObj) {
 	Account *account = (Account *)accountObj;
-	//return account->friendsListA();
+	return account->friendsListA();
 }
-*/
