@@ -166,6 +166,28 @@ std::string Account::uidA() const {
 	return this->uid;
 }
 
+const char **Account::requestListA() const {
+	std::vector<const char*> resultVector;
+	for (auto &val : friendsListRequests) {
+		if (val.is_mutable_string()) {
+			resultVector.push_back(strdup(val.mutable_string().c_str()));
+		} 
+	}
+	const char **result = &resultVector[0];
+	return result;
+}
+const char **Account::freindsListA() const {
+	std::vector<const char*> resultVector;
+	for (auto &val : friendsList) {
+		if (val.is_mutable_string()) {
+			resultVector.push_back(strdup(val.mutable_string().c_str()));
+		}
+	}
+	const char **result = &resultVector[0];
+	return result;
+}
+
+
 void Account::registerFriendsListeners() {
 	FriendsRequestValueListener *requestlistener = new  FriendsRequestValueListener(this);
 	FriendsValueListener *friendslistener = new FriendsValueListener(this);
@@ -299,7 +321,8 @@ void Account::updateDataList() { //UID MUST BE ALREADY INTIALIZED IN ORDER FOR T
 	accountMap.insert(std::pair<firebase::Variant, firebase::Variant>(this->uid, dataList));
 
 	this->initialize(accountMap);
-}//UID MUST BE ALREADY INTIALIZED IN ORDER FOR THIS TO WORK
+}
+//UID MUST BE ALREADY INTIALIZED IN ORDER FOR THIS TO WORK
 void Account::updateDataList(firebase::Variant object) { 
 	firebase::Variant dataList = object;
 	if (dataList.is_vector()) {

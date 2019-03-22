@@ -51,6 +51,8 @@ public:
 	const char* displaynameA() const;
 	int numberOfScansA() const;
 	std::string uidA() const;
+	const char **requestListA() const;
+	const char **freindsListA() const;
 
 	//Dont need wrappers
 	void registerAccountListener();

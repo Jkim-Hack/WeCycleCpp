@@ -21,6 +21,43 @@ DataManager::~DataManager() {
 	//delete database;
 }
 
+void DataManager::pushData(PushableObject *objectToPass) {
+
+	for (auto &x : objectToPass->dataMap()) {
+		firebase::Variant firstKey = x.first;
+		if (x.second.is_vector()) {
+			std::string firstK = firstKey.mutable_string();
+			try {
+				firebase::Future<void> future = dbref.Child(firstK).SetValue(x.second);
+				future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
+					if (future.error() == 0) {
+						std::cout << "Push Successful" << std::endl;
+					}
+					else {
+						std::cout << "Push Failed" << future.error_message() << std::endl;
+					}
+				}, nullptr);
+			}
+			catch (std::exception &e) {
+				std::cout << e.what() << std::endl;
+			}
+		}
+		else {
+			firebase::Variant value = x.second;
+			firebase::Future<void> future = dbref.Child(firstKey.mutable_string()).SetValue(value);
+			future.OnCompletion([](const firebase::Future<void>& future, void* user_data) {
+				if (future.error() == 0) {
+					std::cout << "Push Successful" << std::endl;
+				}
+				else {
+					std::cout << "Push Failed" << future.error_message() << std::endl;
+				}
+			}, nullptr);
+		}
+	}
+
+}
+
 void DataManager::pushData(PushableObject *objectToPass, std::string parent) {
 	
 	for (auto &x : objectToPass->dataMap()) {

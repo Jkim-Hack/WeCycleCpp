@@ -127,7 +127,7 @@ std::string findAndRemovePeriod1(std::string inp) {
 	return input;
 }
 
-const char *Authentication::getUID(const char *email) { //THIS DOESNT WORK
+const char *Authentication::getUID(const char *email) { 
 	firebase::Variant string;
 	EmailsValueListener *listener = new EmailsValueListener(&string);
 	std::string emailO = findAndRemovePeriod1(email);

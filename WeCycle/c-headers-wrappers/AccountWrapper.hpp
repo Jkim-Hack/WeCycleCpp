@@ -25,6 +25,8 @@ extern "C" {
 	const char* profilePicLink(const void *accountObj);
 	const int numberOfScans(const void *accountObj);
 	const char* displayName(const void *accountObj);
+	const char **requestList(const void *accountObj);
+	const char **friendsList(const void *accountObj);
 #ifdef __cplusplus
 }
 #endif
