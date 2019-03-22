@@ -60,7 +60,9 @@ int main() {
 	//pA.addAchievement(&acc, "ID");
 	//acc.addFriend("gtAkbdcSI4bizRSkhNPY4cl92dQ2");
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	acc.addFriend("Y2XgzWR21QWSENQCG22CfLogckT2");
+	const char *o = auth.getUID("jkim@gmail.com");
+	printf(o);
+	printf("\n");
 	//const char **k = acc.requestListA();
 	//acc.addRequestFriend();
 	//acc.addRequestFriend("hVjfDAEucXgzMj2pgDBHfJk6hpr2");

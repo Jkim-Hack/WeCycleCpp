@@ -129,11 +129,10 @@ std::string findAndRemovePeriod1(std::string inp) {
 
 const char *Authentication::getUID(const char *email) { 
 	firebase::Variant string;
-	EmailsValueListener *listener = new EmailsValueListener(&string);
+	EmailValueListener *listener = new EmailValueListener(&string);
 	std::string emailO = findAndRemovePeriod1(email);
-	firebase::database::Query query = this->dbManage->getDBref().Child("Emails").Child(emailO);
-	query.AddValueListener(listener);
-	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	this->dbManage->getDBref().Child("Emails").Child(emailO).AddValueListener(listener);
+	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 	const char *result = strdup(string.mutable_string().c_str());
 	return result;
 }
