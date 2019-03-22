@@ -34,7 +34,10 @@ public:
 	//void retrieveData_account(std::string parent, Account *acc);
 	void retrieveData(std::string parent, firebase::Variant &object);
 	void retrieveData(std::string parent, std::string key, firebase::Variant &object);
+
+
 	firebase::database::DatabaseReference getDBref();
 
 };
+
 

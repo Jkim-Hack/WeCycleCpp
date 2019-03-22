@@ -6,6 +6,11 @@ const void *initializeAccount(const void *dataManager) {
 	Account *account = new Account(dataM);
 	return (void *)account;
 }
+const void *initializeAccountEmail(const void *dataManager, const char* email, const char* password) {
+	DataManager *dataM = (DataManager *)dataManager;
+	Account *account = new Account(dataM);
+	return (void *)account;
+}
 void updateCheckAccount(const void *accountObj, bool res) {
 	Account *account = (Account *)accountObj;
 	account->updateCheckAccount(res);

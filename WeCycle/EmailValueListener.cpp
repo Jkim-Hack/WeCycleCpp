@@ -1,12 +1,12 @@
 #include "EmailValueListener.h"
 
-EmailValueListener::EmailValueListener(firebase::Variant *obj) {
-	object = obj;
+EmailValueListener::EmailValueListener(UID *id) {
+	uid = id;
 }
 void EmailValueListener::OnValueChanged(const firebase::database::DataSnapshot &snapshot) {
 	firebase::Variant obj = snapshot.value();
 	if (obj.is_mutable_string()) {
-		object->set_mutable_string(obj.mutable_string());
+		uid->updateUID(obj.mutable_string());
 		printf("Done454545\n");
 	}
 }

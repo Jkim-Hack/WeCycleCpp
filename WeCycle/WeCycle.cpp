@@ -18,8 +18,8 @@ using variantMap = std::map<firebase::Variant, firebase::Variant>;
 
 int main() {
 
-	const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
-	//const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
+	//const char *filename = "C:/Users/Kim/Desktop/WeCycle/google-services.json"; //Desktop
+	const char *filename = "C:/Users/johnk/Desktop/WeCycle/WeCycle/google-services.json"; //Laptop
 	FirebaseManager *fbManager = new FirebaseManager(filename);
 	DataManager *dataManager = new DataManager(fbManager);
 	
@@ -47,7 +47,10 @@ int main() {
 	Authentication auth(fbManager, dataManager);
 	Account acc(dataManager);
 	auth.signInUser(&acc, "asdasda@gmail.com", "password");
-
+	UID id(dataManager);
+	id.registerListener("jkim@gmail.com");
+	const char *k = id.getUID();
+	printf(k);
 	//StorageManager *storageManager = new StorageManager(fbManager, &acc);
 	//const char* k = storageManager->uploadImageRetreiveLink("C:/Users/Kim/Desktop/Gial_Ackbar_Resistance.jpg");
 
@@ -59,10 +62,7 @@ int main() {
 	//PlayerAchievements pA(dataManager, "hVjfDAEucXgzMj2pgDBHfJk6hpr2");
 	//pA.addAchievement(&acc, "ID");
 	//acc.addFriend("gtAkbdcSI4bizRSkhNPY4cl92dQ2");
-	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	const char *o = auth.getUID("jkim@gmail.com");
-	printf(o);
-	printf("\n");
+
 	//const char **k = acc.requestListA();
 	//acc.addRequestFriend();
 	//acc.addRequestFriend("hVjfDAEucXgzMj2pgDBHfJk6hpr2");

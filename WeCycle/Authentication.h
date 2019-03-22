@@ -28,6 +28,4 @@ public:
 	void updateUserProfile(Account *acc, const char* pfplink, const char* displayname);
 	void updateUserPFPLink(Account *acc, const char* pfplink);
 
-	const char *getUID(const char* email);
-
 };

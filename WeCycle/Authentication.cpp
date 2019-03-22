@@ -119,21 +119,3 @@ void Authentication::updateUserPFPLink(Account *acc, const char* pfplink) {
 		acc->updatePFP(profile.photo_url);
 	}
 }
-
-std::string findAndRemovePeriod1(std::string inp) {
-	std::string input = inp;
-	std::size_t index = input.find(".");
-	input.erase(input.begin() + index);
-	return input;
-}
-
-const char *Authentication::getUID(const char *email) { 
-	firebase::Variant string;
-	EmailValueListener *listener = new EmailValueListener(&string);
-	std::string emailO = findAndRemovePeriod1(email);
-	this->dbManage->getDBref().Child("Emails").Child(emailO).AddValueListener(listener);
-	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-	const char *result = strdup(string.mutable_string().c_str());
-	return result;
-}
-

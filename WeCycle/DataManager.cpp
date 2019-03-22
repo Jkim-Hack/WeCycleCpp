@@ -268,4 +268,3 @@ void DataManager::retrieveData(std::string parent, std::string key, firebase::Va
 firebase::database::DatabaseReference DataManager::getDBref() {
 	return dbref;
 }
-
